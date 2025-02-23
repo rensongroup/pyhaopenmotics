@@ -82,11 +82,12 @@ def get_ssl_context(*, verify_ssl: bool = True) -> ssl.SSLContext:
         ssl_context = ssl.create_default_context()
     else:
         # self signed certificates
-        ssl_context = ssl.create_default_context(ssl.Purpose.SERVER_AUTH)
+        # ssl_context = ssl.create_default_context(ssl.Purpose.SERVER_AUTH)
+        ssl_context = ssl.create_default_context()
         ssl_context.check_hostname = False
         ssl_context.verify_mode = ssl.CERT_NONE
 
-        ssl_context.options &= ~ssl.OP_NO_SSLv3
-        ssl_context.minimum_version = ssl.TLSVersion.TLSv1
-        ssl_context.set_ciphers("AES256-SHA")  # enables weaker ciphers and protocols
+        # ssl_context.options &= ~ssl.OP_NO_SSLv3
+        # ssl_context.minimum_version = ssl.TLSVersion.TLSv1
+        # ssl_context.set_ciphers("AES256-SHA")  # enables weaker ciphers and protocols
     return ssl_context

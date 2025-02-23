@@ -46,15 +46,23 @@ class OpenMoticsOutputs:
 
         """
         path = f"/base/installations/{self._omcloud.installation_id}/outputs"
+        default_filter = '{"usage":"CONTROL"}'
 
-        if output_filter:
-            query_params = {"filter": output_filter}
-            body = await self._omcloud.get(
-                path=path,
-                params=query_params,
-            )
-        else:
-            body = await self._omcloud.get(path)
+        # Renson cloud uses by default usage=CONTROL filter
+        # https://api.openmotics.com/api/v1.1/base/installations/1/outputs?filter={%22usage%22:%22CONTROL%22}
+        query_params = {"filter": output_filter} if output_filter else {"filter": default_filter}
+
+        # if output_filter:
+        #     query_params = {"filter": output_filter}
+        # else:
+        #     # Renson cloud uses by default usage=CONTROL filer
+        #     # https://api.openmotics.com/api/v1.1/base/installations/1/outputs?filter={%22usage%22:%22CONTROL%22}
+        #     query_params = {"filter": {"usage": "CONTROL"}}
+
+        body = await self._omcloud.get(
+            path=path,
+            params=query_params,
+        )
 
         return [Output.from_dict(output) for output in body["data"]]
 

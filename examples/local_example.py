@@ -6,7 +6,7 @@ How to use this script:
     export LOCALGW='192.168.0.2'
     export USER_NAME="dnfqsdfjqsjfqsdjfqf"
     export PASSWORD="djfqsdkfjqsdkfjqsdkfjqsdkfjkqsdjfkjdkfqjdskf"
-    export TLS=True
+    export TLS=False
     python cloud_example.py
 """
 
@@ -15,6 +15,7 @@ from __future__ import annotations
 import asyncio
 import logging
 import os
+import ssl
 
 try:
     from dotenv import load_dotenv
@@ -41,6 +42,11 @@ username = os.environ["USER_NAME"]
 password = os.environ["PASSWORD"]
 port = int(os.environ["PORT"])
 
+ssl_context = ssl.create_default_context()
+if os.environ["VERIFY_SSL"] == "False":
+    ssl_context.check_hostname = False
+    ssl_context.verify_mode = ssl.CERT_NONE
+
 
 async def main() -> None:
     """Show example on controlling your OpenMotics device."""
@@ -49,6 +55,7 @@ async def main() -> None:
         username=username,
         password=password,
         port=port,
+        ssl_context=ssl_context,
     ) as omclient:
         await omclient.exec_action("get_version")
 

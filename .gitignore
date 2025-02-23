@@ -127,3 +127,5 @@ crates/ruff/resources/test/cpython
 docs/
 mkdocs.yml
 .overrides
+
+.early.coverage
