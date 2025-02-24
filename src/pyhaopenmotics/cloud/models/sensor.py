@@ -9,7 +9,7 @@ from mashumaro.mixins.orjson import DataClassORJSONMixin
 
 from .location import Location
 
-zombie_status = {"humidity": None, "temperature": None, "brightness": None}
+zombie_status = {"humidity": None, "temperature": None, "brightness": None, "power": None}
 
 
 @dataclass
@@ -19,6 +19,7 @@ class Status(DataClassORJSONMixin):
     humidity: float | None = field(default=None)
     temperature: float | None = field(default=None)
     brightness: int | None = field(default=None)
+    power: float | None = field(default=None)
 
 
 @dataclass
