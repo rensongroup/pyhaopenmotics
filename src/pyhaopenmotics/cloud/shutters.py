@@ -52,14 +52,16 @@ class OpenMoticsShutters:
 
         """
         path = f"/base/installations/{self._omcloud.installation_id}/shutters"
-        if shutter_filter:
-            query_params = {"filter": shutter_filter}
-            body = await self._omcloud.get(
-                path=path,
-                params=query_params,
-            )
-        else:
-            body = await self._omcloud.get(path)
+        default_filter = '{"usage":"CONTROL"}'
+
+        # Renson cloud uses by default usage=CONTROL filter
+        # https://api.openmotics.com/api/v1.1/base/installations/1/outputs?filter={%22usage%22:%22CONTROL%22}
+        query_params = {"filter": shutter_filter} if shutter_filter else {"filter": default_filter}
+
+        body = await self._omcloud.get(
+            path=path,
+            params=query_params,
+        )
 
         return [Shutter.from_dict(shutter) for shutter in body["data"]]
 

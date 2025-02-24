@@ -10,125 +10,131 @@ ci:
   skip:
     - pip-compile
 repos:
-  - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v5.0.0
+  - repo: local
     hooks:
-      - id: check-added-large-files
-        exclude: .mypy_cache
-      - id: check-ast
-      - id: check-builtin-literals
-      - id: check-case-conflict
-      - id: check-docstring-first
-      - id: check-executables-have-shebangs
-      - id: check-json
-        exclude: (.vscode|.devcontainer)
-      - id: check-shebang-scripts-are-executable
-      - id: check-symlinks
-      - id: check-toml
-      - id: check-yaml
-        exclude: mkdocs\.yml$|config/configuration.yaml
-      - id: debug-statements
-      - id: destroyed-symlinks
-      - id: end-of-file-fixer
-        exclude: .mypy_cache|node_modules
-      - id: fix-byte-order-marker
-      - id: forbid-submodules
-      - id: mixed-line-ending
-      - id: pretty-format-json
-        args: [--autofix]
-        exclude: ^$|.devcontainer
-        # exclude: node_modules|.mypy_cache
-      - id: requirements-txt-fixer
-      - id: trailing-whitespace
-      - id: check-merge-conflict
-      - id: no-commit-to-branch
-        args:
-          - --branch=devel
-          - --branch=master
-
-  - repo: https://github.com/python-jsonschema/check-jsonschema
-    rev: 0.31.0
-    hooks:
-      - id: check-github-workflows
-      - id: check-github-actions
-      - id: check-readthedocs
-
-  - repo: https://github.com/codespell-project/codespell
-    rev: v2.4.0
-    hooks:
-      - id: codespell
-
-  - repo: https://github.com/PyCQA/bandit
-    rev: 1.8.2
-    hooks:
-      - id: bandit
-        args: ["-c", "pyproject.toml"]
-        additional_dependencies: ["bandit[toml]"]
-
-  - repo: https://github.com/adrienverge/yamllint.git
-    rev: v1.35.1
-    hooks:
-      - id: yamllint
-        exclude: .github
-
-  - repo: https://github.com/pre-commit/mirrors-prettier
-    rev: v4.0.0-alpha.8
-    hooks:
-      - id: prettier
-        additional_dependencies:
-          - prettier
-          - prettier-plugin-toml
-        exclude: .github
-
-  - repo: https://github.com/cdce8p/python-typing-update
-    rev: v0.7.0
-    hooks:
-      # Run `python-typing-update` hook manually from time to time
-      # to update python typing syntax.
-      # Will require manual work, before submitting changes!
-      # pre-commit run --hook-stage manual python-typing-update --all-files
-      - id: python-typing-update
-        stages: [manual]
-        args:
-          - --py313-plus
-          - --force
-          - --keep-updates
-
-  - repo: https://github.com/asottile/pyupgrade
-    rev: v3.19.1
-    hooks:
-      - id: pyupgrade
-
-  - repo: https://github.com/pappasam/toml-sort
-    rev: v0.24.2
-    hooks:
-      - id: toml-sort
-        args: []
-
-  - repo: https://github.com/charliermarsh/ruff-pre-commit
-    rev: v0.9.3
-    hooks:
-      - id: ruff
-        args:
-          - --fix
+      - id: ruff-check
+        name: 🐶 Ruff Linter
+        language: system
+        types: [python]
+        entry: uv run ruff check --fix
         exclude: ^examples|^tests
+        require_serial: true
+        stages: [pre-commit, pre-push, manual]
       - id: ruff-format
-        exclude: ^examples|^tests
-
-  - repo: https://github.com/pre-commit/mirrors-mypy
-    rev: v1.14.1
-    hooks:
+        name: 🐶 Ruff Formatter
+        language: system
+        types: [python]
+        entry: uv run ruff format
+        require_serial: true
+        stages: [pre-commit, pre-push, manual]
+      - id: check-ast
+        name: 🐍 Check Python AST
+        language: system
+        types: [python]
+        entry: uv run check-ast
+      - id: check-case-conflict
+        name: 🔠 Check for case conflicts
+        language: system
+        entry: uv run check-case-conflict
+      - id: check-docstring-first
+        name: ℹ️  Check docstring is first
+        language: system
+        types: [python]
+        entry: uv run check-docstring-first
+      - id: check-executables-have-shebangs
+        name: 🧐 Check that executables have shebangs
+        language: system
+        types: [text, executable]
+        entry: uv run check-executables-have-shebangs
+        stages: [pre-commit, pre-push, manual]
+      - id: check-json
+        name: ｛ Check JSON files
+        language: system
+        types: [json]
+        entry: uv run check-json
+      - id: check-merge-conflict
+        name: 💥 Check for merge conflicts
+        language: system
+        types: [text]
+        entry: uv run check-merge-conflict
+      - id: check-symlinks
+        name: 🔗 Check for broken symlinks
+        language: system
+        types: [symlink]
+        entry: uv run check-symlinks
+      - id: check-toml
+        name: ✅ Check TOML files
+        language: system
+        types: [toml]
+        entry: uv run check-toml
+      - id: check-xml
+        name: ✅ Check XML files
+        entry: check-xml
+        language: system
+        types: [xml]
+      - id: check-yaml
+        name: ✅ Check YAML files
+        language: system
+        types: [yaml]
+        entry: uv run check-yaml
+      - id: codespell
+        name: ✅ Check code for common misspellings
+        language: system
+        types: [text]
+        exclude: ^uv\.lock$
+        entry: uv run codespell
+      - id: detect-private-key
+        name: 🕵️  Detect Private Keys
+        language: system
+        types: [text]
+        entry: uv run detect-private-key
+      - id: end-of-file-fixer
+        name: ⮐  Fix End of Files
+        language: system
+        types: [text]
+        entry: uv run end-of-file-fixer
+        stages: [pre-commit, pre-push, manual]
       - id: mypy
+        name: 🆎 Static type checking using mypy
+        language: system
+        types: [python]
+        entry: uv run mypy
         exclude: ^docs/|^tests|^examples
-
-  - repo: https://github.com/PyCQA/pylint
-    rev: v3.3.3
-    hooks:
+        require_serial: true
+      - id: no-commit-to-branch
+        name: 🛑 Don't commit to main branch
+        language: system
+        entry: uv run no-commit-to-branch
+        pass_filenames: false
+        always_run: true
+        args:
+          - --branch=main
+      - id: prettier
+        name: 💄 Ensuring files are prettier
+        language: system
+        types: [yaml, json, markdown]
+        entry: npm run prettier
+        pass_filenames: false
       - id: pylint
-        additional_dependencies:
-          - pytest
-
-  - repo: https://github.com/RobertCraigie/pyright-python
-    rev: v1.1.392.post0
-    hooks:
-      - id: pyright
+        name: 🌟 Starring code with pylint
+        language: system
+        types: [python]
+        entry: uv run pylint
+        exclude: ^docs/|^tests|^examples
+      - id: pytest
+        name: 🧪 Running tests and test coverage with pytest
+        language: system
+        types: [python]
+        entry: uv run pytest
+        pass_filenames: false
+      - id: trailing-whitespace
+        name: ✄  Trim Trailing Whitespace
+        language: system
+        types: [text]
+        entry: uv run trailing-whitespace-fixer
+        stages: [pre-commit, pre-push, manual]
+      - id: yamllint
+        name: 🎗  Check YAML files with yamllint
+        language: system
+        types: [yaml]
+        entry: uv run yamllint

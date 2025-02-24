@@ -4,6 +4,7 @@
 How to use this script:
     export CLIENT_ID="dnfqsdfjqsjfqsdjfqf"
     export CLIENT_SECRET="djfqsdkfjqsdkfjqsdkfjqsdkfjkqsdjfkjdkfqjdskf"
+    export INSTALLATION_ID="1" if you have multiple installations
     python cloud_example.py
 """
 
@@ -43,6 +44,7 @@ load_dotenv()
 
 client_id = os.environ["CLIENT_ID"]
 client_secret = os.environ["CLIENT_SECRET"]
+installation_id = os.environ["INSTALLATION_ID"]
 
 
 async def main() -> None:
@@ -67,7 +69,10 @@ async def main() -> None:
 
         installations = await omclient.installations.get_all()
 
-        i_id = installations[0].idx
+        if installation_id:
+            i_id = int(installation_id)
+        else:
+            i_id = installations[0].idx
 
         await omclient.installations.get_by_id(i_id)
         omclient.installation_id = i_id

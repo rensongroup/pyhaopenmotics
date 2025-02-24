@@ -1,9 +1,9 @@
 [project]
 name = "pyhaopenmotics"
-version = "0.0.7"
+dynamic = ["version"]
 description = "Asynchronous Python client for the OpenMotics API."
-authors = [{ name = "Wouter Coppens", email = "wouter.coppens@gmail.com"}]
-maintainers = [{ name = "Wouter Coppens", email = "wouter.coppens@gmail.com"}]
+authors = [{ name = "Wouter Coppens", email = "wouter.coppens@gmail.com" }]
+maintainers = [{ name = "Wouter Coppens", email = "wouter.coppens@gmail.com" }]
 license = { text = "AGPLv3" }
 readme = "README.md"
 keywords = ["openmotics", "api", "async", "client", "homeassistant"]
@@ -30,11 +30,7 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
-cli = [
-  "authlib>=1.4.0",
-  "httpx>=0.28.1",
-  "python-dotenv>=1.0.1",
-]
+cli = ["authlib>=1.4.0", "httpx>=0.28.1", "python-dotenv>=1.0.1"]
 
 # packages = [
 #     { include = "pyhaopenmotics", from = "src" },
@@ -64,20 +60,20 @@ python_version = "3.13"
 color_output = true
 error_summary = true
 
-disable_error_code = ['arg-type','return-value','misc', 'no-any-return']
+disable_error_code = ['arg-type', 'return-value', 'misc', 'no-any-return']
 
 [tool.pylint]
 max-line-length = 120
 
 messages_control.disable = [
-# Reasons disabled:
-# format - handled by ruff
+  # Reasons disabled:
+  # format - handled by ruff
   "format",
-# line-too-long - handled by ruff
+  # line-too-long - handled by ruff
   "line-too-long",
-# duplicate-code - unavoidable
+  # duplicate-code - unavoidable
   "duplicate-code",
-# used-before-assignment - false positives with TYPE_CHECKING structures
+  # used-before-assignment - false positives with TYPE_CHECKING structures
   "used-before-assignment",
 
   "abstract-method",
@@ -86,12 +82,12 @@ messages_control.disable = [
   "fixme",
   "too-many-instance-attributes",
   "too-many-arguments",
-  "unreachable" #only in src/pyhaopenmotics/openmoticsgw/thermostats.py
+  "unreachable",                   #only in src/pyhaopenmotics/openmoticsgw/thermostats.py
 ]
 ignore-paths = [
   "examples",
   "tests",
-  "src/pyhaopenmotics/client/websocket.py" # To be fixed one day
+  "src/pyhaopenmotics/client/websocket.py", # To be fixed one day
 ]
 
 
@@ -105,10 +101,10 @@ line-length = 125
 
 [tool.ruff.lint]
 ignore = [
-  "ANN401", # Opinioated warning on disallowing dynamically typed expressions
-  "D203", # Conflicts with other rules
-  "D213", # Conflicts with other rules
-  "D417", # False positives in some occasions
+  "ANN401",  # Opinioated warning on disallowing dynamically typed expressions
+  "D203",    # Conflicts with other rules
+  "D213",    # Conflicts with other rules
+  "D417",    # False positives in some occasions
   "PLR2004", # Just annoying, not really useful
 
   # Conflicts with the Ruff formatter
@@ -120,7 +116,7 @@ ignore = [
   "FIX001",
   "FIX002",
   "TD003",
-  "ARG002"
+  "ARG002",
 ]
 select = ["ALL"]
 
@@ -146,14 +142,14 @@ max-complexity = 25
 "examples/*.py" = ["ALL"]
 "src/pyhaopenmotics/client/websocket.py" = ["ALL"]
 "src/pyhaopenmotics/client/openmoticscloud.py" = ["ERA001"] # Websockets code
-"src/pyhaopenmotics/client/localgateway.py" = ["ERA001"] # Websockets code
+"src/pyhaopenmotics/client/localgateway.py" = ["ERA001"]    # Websockets code
 # "src/pyhaopenmotics/cloud/models/*.py" = ["TCH002", "TCH003"]
 
 
 [tool.pyright]
 venvPath = "."
 venv = ".venv"
-exclude = ["examples","tests"]
+exclude = ["examples", "tests"]
 
 reportArgumentType = false
 reportCallIssue = false
@@ -163,6 +159,7 @@ reportCallIssue = false
 prerelease = "allow"
 dev-dependencies = [
   "aresponses==3.0.0",
+  "aioresponses==0.7.8",
   "codespell==2.4.0",
   "covdefaults==2.3.0",
   "coverage[toml]==7.6.10",
@@ -173,6 +170,7 @@ dev-dependencies = [
   "pytest==8.3.4",
   "pytest-asyncio==0.25.2",
   "pytest-cov==6.0.0",
+  "pytest-mock==3.14",
   "ruff==0.9.3",
   # syrupy==4.8.1",
   "yamllint==1.35.1",
@@ -181,3 +179,6 @@ dev-dependencies = [
 [build-system]
 requires = ["hatchling"]
 build-backend = "hatchling.build"
+
+[tool.hatch.version]
+path = "src/pyhaopenmotics/__version__.py"
