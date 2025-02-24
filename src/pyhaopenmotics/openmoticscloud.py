@@ -12,6 +12,7 @@ import backoff
 from yarl import URL
 
 from .__version__ import __version__
+from .cloud.energy import OpenMoticsEnergySensors
 from .cloud.groupactions import OpenMoticsGroupActions
 from .cloud.inputs import OpenMoticsInputs
 from .cloud.installations import OpenMoticsInstallations
@@ -313,6 +314,17 @@ class OpenMoticsCloud:
 
         """
         return OpenMoticsSensors(self)
+
+    @property
+    def energysensors(self) -> OpenMoticsEnergySensors:
+        """Get energy sensors.
+
+        Returns
+        -------
+            OpenMoticsEnergySensors
+
+        """
+        return OpenMoticsEnergySensors(self)
 
     @property
     def shutters(self) -> OpenMoticsShutters:
