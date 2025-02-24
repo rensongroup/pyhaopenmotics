@@ -1,6 +1,6 @@
 [project]
 name = "pyhaopenmotics"
-version = "0.0.8"
+dynamic = ["version"]
 description = "Asynchronous Python client for the OpenMotics API."
 authors = [{ name = "Wouter Coppens", email = "wouter.coppens@gmail.com" }]
 maintainers = [{ name = "Wouter Coppens", email = "wouter.coppens@gmail.com" }]
@@ -179,3 +179,6 @@ dev-dependencies = [
 [build-system]
 requires = ["hatchling"]
 build-backend = "hatchling.build"
+
+[tool.hatch.version]
+path = "src/pyhaopenmotics/__version__.py"

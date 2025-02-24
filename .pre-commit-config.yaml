@@ -102,7 +102,7 @@ repos:
         exclude: ^docs/|^tests|^examples
         require_serial: true
       - id: no-commit-to-branch
-        name: 🛑 Don't commit to main branchpre-commit migrate-config
+        name: 🛑 Don't commit to main branch
         language: system
         entry: uv run no-commit-to-branch
         pass_filenames: false
@@ -120,6 +120,7 @@ repos:
         language: system
         types: [python]
         entry: uv run pylint
+        exclude: ^docs/|^tests|^examples
       - id: pytest
         name: 🧪 Running tests and test coverage with pytest
         language: system

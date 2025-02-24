@@ -601,7 +601,6 @@ wheels = [
 
 [[package]]
 name = "pyhaopenmotics"
-version = "0.0.8"
 source = { editable = "." }
 dependencies = [
     { name = "aiohttp" },
