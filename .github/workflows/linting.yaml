@@ -41,7 +41,7 @@ jobs:
       - name: 🏗 Install dependencies
         run: uv sync --extra cli --frozen --dev
       - name: 🚀 Run ruff linter
-        run: uv run ruff check --output-format=github .
+        run: uv run ruff check --exclude=tests --output-format=github .
       - name: 🚀 Run ruff formatter
         run: uv run ruff format --check .
 
@@ -74,12 +74,12 @@ jobs:
         run: uv run pre-commit run check-symlinks --all-files
       - name: 🚀 Check TOML files
         run: uv run pre-commit run check-toml --all-files
-      # - name: 🚀 Check XML files
-      #  run: uv run pre-commit run check-xml --all-files
+      - name: 🚀 Check XML files
+        run: uv run pre-commit run check-xml --all-files
       - name: 🚀 Check YAML files
         run: uv run pre-commit run check-yaml --all-files
-      # - name: 🚀 Detect Private Keys
-      #   run: uv run pre-commit run detect-private-key --all-files
+      - name: 🚀 Detect Private Keys
+        run: uv run pre-commit run detect-private-key --all-files
       - name: 🚀 Check End of Files
         run: uv run pre-commit run end-of-file-fixer --all-files
       - name: 🚀 Trim Trailing Whitespace
