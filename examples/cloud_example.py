@@ -83,6 +83,8 @@ async def main() -> None:
 
         await omclient.sensors.get_all()
 
+        await omclient.energysensors.get_all()
+
         await omclient.groupactions.get_all()
 
         await omclient.thermostats.groups.get_all()
