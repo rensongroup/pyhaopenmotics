@@ -2,13 +2,14 @@
 
 from __future__ import annotations
 
+import asyncio
+
 # import abc
 import logging
 import socket
 from typing import TYPE_CHECKING, Any
 
 import aiohttp
-import async_timeout
 import backoff
 
 # import websockets
@@ -128,7 +129,7 @@ class BaseClient:
             self._close_session = True
 
         try:
-            async with async_timeout.timeout(self.request_timeout):
+            async with asyncio.timeout(self.request_timeout):
                 resp = await self.session.request(
                     method,
                     url,

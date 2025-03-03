@@ -2,13 +2,13 @@
 
 from __future__ import annotations
 
+import asyncio
 import logging
 import socket
 import time
 from typing import TYPE_CHECKING, Any
 
 import aiohttp
-import async_timeout
 from yarl import URL
 
 from .__version__ import __version__
@@ -136,7 +136,7 @@ class LocalGateway:
             self._close_session = True
 
         try:
-            async with async_timeout.timeout(self.request_timeout):
+            async with asyncio.timeout(self.request_timeout):
                 resp = await self.session.request(
                     method,
                     url,

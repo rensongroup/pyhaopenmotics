@@ -1,31 +1,32 @@
 {
   "[python]": {
+    "editor.formatOnSave": true,
     "editor.defaultFormatter": "charliermarsh.ruff",
     "editor.codeActionsOnSave": {
       "source.fixAll": "explicit",
       "source.organizeImports": "explicit"
     }
   },
+  "files.exclude": {
+    "**/__pycache__": true
+  },
   "coverage-gutters.customizable.context-menu": true,
   "coverage-gutters.customizable.status-bar-toggler-watchCoverageAndVisibleEditors-enabled": true,
   "coverage-gutters.showGutterCoverage": false,
   "coverage-gutters.showLineCoverage": true,
-  "coverage-gutters.xmlname": "coverage.xml",
   "python.defaultInterpreterPath": ".venv/bin/python",
-  "python.formatting.provider": "ruff",
-  "python.linting.enabled": true,
-  "python.linting.mypyEnabled": true,
-  "python.linting.pylintEnabled": true,
   "python.testing.cwd": "${workspaceFolder}",
   "python.testing.pytestArgs": ["--cov-report=xml"],
-  "ruff.nativeServer": "on",
+  "ruff.nativeServer": "auto",
   "python.testing.pytestEnabled": true,
   "ruff.configuration": "${workspaceFolder}/pyproject.toml",
   "ruff.importStrategy": "fromEnvironment",
   "terminal.integrated.defaultProfile.linux": "bash",
-  "editor.formatOnPaste": false,
+  "editor.formatOnPaste": true,
   "editor.formatOnSave": true,
   "editor.formatOnType": true,
+  "editor.inlineSuggest.enabled": true,
   "files.trimTrailingWhitespace": true,
+  "python.terminal.activateEnvInCurrentTerminal": true,
   "editor.rulers": [88]
 }
