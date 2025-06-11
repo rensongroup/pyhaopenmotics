@@ -3,7 +3,7 @@
   "description": "Asynchronous client for the OpenMotics API",
   "devDependencies": {
     "prettier": "^3.5.3",
-    "pyright": "^1.1.401"
+    "pyright": "^1.1.402"
   },
   "license": "AGPLv3",
   "name": "pyhaopenmotics",
