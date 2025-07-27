@@ -52,19 +52,37 @@ class Installation(DataClassORJSONMixin):
     #     'network': {'local_ip_address': '172.16.1.25'},
     #     'flags': {'UNREAD_NOTIFICATIONS': 0, 'ONLINE': None},
     #     'features':
-    #         {'outputs': {'available': True, 'used': True, 'metadata': None},
-    #          'thermostats': {'available': True, 'used': False, 'metadata': None},
-    #          'energy': {'available': True, 'used': True, 'metadata': None},
-    #          'apps': {'available': True, 'used': False, 'metadata': None},
-    #          'shutters': {'available': True, 'used': False, 'metadata': None},
-    #          'consumption': {'available': False, 'used': False, 'metadata': None},
-    #          'scheduler': {'available': True, 'used': True, 'metadata': None},
-    #          'ems': {'available': False, 'used': False, 'metadata': None}},
-    #          'gateway_features': ['metrics', 'dirty_flag', 'scheduling',
-    #          'factory_reset', 'isolated_plugins',
-    #          'websocket_maintenance', 'shutter_positions',
-    #          'ventilation', 'default_timer_disabled',
-    #          '100_steps_dimmer', 'input_states']
+    #         ["control_events",
+    #           "dirty_flag",
+    #           "100_steps_dimmer",
+    #           "measurement_counter_schema",
+    #           "in_use_property",
+    #           "websocket_maintenance",
+    #           "modules_information",
+    #           "thermostat_groups",
+    #           "hot_water_schema",
+    #           "default_timer_disabled",
+    #           "cloud_event_logs",
+    #           "isolated_plugins",
+    #           "input_states",
+    #           "sensors_exclude_source",
+    #           "sensor_parameter",
+    #           "current_transformer_schema",
+    #           "sync_modules_information",
+    #           "show_in_app_property",
+    #           "metrics",
+    #           "dynamic_updates",
+    #           "shutter_positions",
+    #           "thermostat_v1",
+    #           "ventilation_schema",
+    #           "network_discovery",
+    #           "long_names",
+    #           "pause_schedules",
+    #           "thermostats_gateway",
+    #           "scheduling",
+    #           "gateway_sensors",
+    #           "factory_reset"
+    #           "gateway_maintenance",]
     # }
     """
 
@@ -86,10 +104,10 @@ class Installation(DataClassORJSONMixin):
     registration_key: str | None = field(default=None)
     platform: str | None = field(default=None)
     # TODO @woutercoppens: fix later
-    # building_roles: dict[str, Any]  | None = field(default=None)
+    building_roles: list | None = field(default=None)
     network: Network | None = field(default=None)
     flags: dict[str, Any] | None = field(default=None)
-    features: dict[str, Any] | None = field(default=None)
+    features: list | None = field(default=None)
 
     def __str__(self) -> str:
         """Represent the class objects as a string.
