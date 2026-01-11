@@ -16,9 +16,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: ⤵️ Check out code from GitHub
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
       - name: 🏗 Set up uv
-        uses: astral-sh/setup-uv@v7.1.2
+        uses: astral-sh/setup-uv@v7.1.4
         with:
           enable-cache: true
           python-version: ${{ env.DEFAULT_PYTHON }}
@@ -32,9 +32,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: ⤵️ Check out code from GitHub
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
       - name: 🏗 Set up uv
-        uses: astral-sh/setup-uv@v7.1.2
+        uses: astral-sh/setup-uv@v7.1.4
         with:
           enable-cache: true
           python-version: ${{ env.DEFAULT_PYTHON }}
@@ -50,9 +50,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: ⤵️ Check out code from GitHub
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
       - name: 🏗 Set up uv
-        uses: astral-sh/setup-uv@v7.1.2
+        uses: astral-sh/setup-uv@v7.1.4
         with:
           enable-cache: true
           python-version: ${{ env.DEFAULT_PYTHON }}
@@ -90,9 +90,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: ⤵️ Check out code from GitHub
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
       - name: 🏗 Set up uv
-        uses: astral-sh/setup-uv@v7.1.2
+        uses: astral-sh/setup-uv@v7.1.4
         with:
           enable-cache: true
           python-version: ${{ env.DEFAULT_PYTHON }}
@@ -106,9 +106,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: ⤵️ Check out code from GitHub
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
       - name: 🏗 Set up uv
-        uses: astral-sh/setup-uv@v7.1.2
+        uses: astral-sh/setup-uv@v7.1.4
         with:
           enable-cache: true
           python-version: ${{ env.DEFAULT_PYTHON }}
@@ -122,16 +122,16 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: ⤵️ Check out code from GitHub
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
       - name: 🏗 Set up uv
-        uses: astral-sh/setup-uv@v7.1.2
+        uses: astral-sh/setup-uv@v7.1.4
         with:
           enable-cache: true
           python-version: ${{ env.DEFAULT_PYTHON }}
       - name: 🏗 Install dependencies
         run: uv sync --frozen --dev
       - name: 🏗 Set up Node.js
-        uses: actions/setup-node@v6.0.0
+        uses: actions/setup-node@v6.1.0
         with:
           node-version-file: ".nvmrc"
           cache: "npm"
