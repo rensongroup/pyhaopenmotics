@@ -44,7 +44,10 @@ load_dotenv()
 
 client_id = os.environ["CLIENT_ID"]
 client_secret = os.environ["CLIENT_SECRET"]
-installation_id = os.environ["INSTALLATION_ID"]
+if "INSTALLATION_ID" in os.environ:
+    installation_id = os.environ["INSTALLATION_ID"]
+else:
+    installation_id = None
 
 
 async def main() -> None:
