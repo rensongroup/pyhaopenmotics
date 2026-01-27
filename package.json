@@ -2,7 +2,7 @@
   "author": "Wouter Coppens <wouter.coppens@gmail.com>",
   "description": "Asynchronous client for the OpenMotics API",
   "devDependencies": {
-    "prettier": "^3.7.4",
+    "prettier": "^3.8.1",
     "pyright": "^1.1.408"
       },
   "license": "AGPLv3",
