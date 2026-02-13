@@ -126,7 +126,7 @@ class BaseClient:
         """Get thermostats module."""
         return self._get_api_module(self._thermostats_class, "Thermostats")
 
-    @stamina.retry(on=aiohttp.ClientError, attempts=3)
+    @stamina.retry(on=OpenMoticsConnectionError, attempts=3)
     async def _request(
         self,
         path: str,
@@ -189,6 +189,11 @@ class BaseClient:
 
             response.raise_for_status()
 
+            content_type = response.headers.get("Content-Type", "")
+            if "application/json" in content_type:
+                return await response.json()
+            return await response.text()
+
         except TimeoutError as exception:
             msg = "Timeout occurred while connecting to OpenMotics API."
             raise OpenMoticsConnectionTimeoutError(msg) from exception
@@ -199,16 +204,16 @@ class BaseClient:
         except aiohttp.ClientResponseError as exception:
             if exception.status in [401, 403]:
                 raise AuthenticationError from exception
-            msg = "Error occurred while communicating with OpenMotics API."
+            msg = (
+                f"Error occurred while communicating with OpenMotics API: {exception.status}, message='{exception.message}'"
+            )
             raise OpenMoticsConnectionError(msg) from exception
         except (socket.gaierror, aiohttp.ClientError) as exception:
             msg = "Error occurred while communicating with OpenMotics API."
             raise OpenMoticsConnectionError(msg) from exception
-
-        content_type = response.headers.get("Content-Type", "")
-        if "application/json" in content_type:
-            return await response.json()
-        return await response.text()
+        except Exception as exception:
+            msg = f"Unexpected error occurred while communicating with OpenMotics API: {exception}"
+            raise OpenMoticsConnectionError(msg) from exception
 
     async def get_token(self) -> None:
         """Login to the gateway and set the token."""

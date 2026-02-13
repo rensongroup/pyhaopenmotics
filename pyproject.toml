@@ -97,6 +97,8 @@ lint.ignore = [
   "E731",
 ]
 lint.per-file-ignores."tests/*" = [ "S101" ]
+# Flag errors (`C901`) whenever the complexity level exceeds 5.
+lint.mccabe.max-complexity = 11
 
 [tool.codespell]
 write-changes = true
@@ -111,12 +113,6 @@ ini_options.asyncio_mode = "auto"
 run.branch = true
 run.source = [ "src/pyhaopenmotics" ]
 report.skip_empty = true
-
-# [tool.coverage]
-# run.plugins = ["covdefaults"]
-# run.source = ["pyhaopenmotics"]
-# report.fail_under = 25
-# report.show_missing = true
 
 [tool.pyright]
 venvPath = "."
