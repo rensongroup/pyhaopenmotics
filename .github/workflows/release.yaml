@@ -8,7 +8,7 @@ on:
       - published
 
 env:
-  DEFAULT_PYTHON: "3.11"
+  DEFAULT_PYTHON: "3.14"
 
 jobs:
   release:
@@ -29,7 +29,7 @@ jobs:
           enable-cache: true
           python-version: ${{ env.DEFAULT_PYTHON }}
       - name: 🏗 Install dependencies
-        run: uv sync --extra cli --frozen --dev
+        run: uv sync --frozen --dev
       - name: 🏗 Set package version
         run: |
           version="${{ github.event.release.tag_name }}"

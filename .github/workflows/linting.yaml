@@ -8,7 +8,7 @@ on:
   workflow_dispatch:
 
 env:
-  DEFAULT_PYTHON: "3.13"
+  DEFAULT_PYTHON: "3.14"
 
 jobs:
   codespell:
@@ -39,7 +39,7 @@ jobs:
           enable-cache: true
           python-version: ${{ env.DEFAULT_PYTHON }}
       - name: 🏗 Install dependencies
-        run: uv sync --extra cli --frozen --dev
+        run: uv sync -frozen --dev
       - name: 🚀 Run ruff linter
         run: uv run ruff check --exclude=tests --output-format=github .
       - name: 🚀 Run ruff formatter
