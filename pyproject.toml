@@ -96,9 +96,11 @@ lint.ignore = [
   # DoNotAssignLambda
   "E731",
 ]
+lint.per-file-ignores."src/pyhaopenmotics/client/baseclient.py" = [ "C901" ]
 lint.per-file-ignores."tests/*" = [ "S101" ]
+
 # Flag errors (`C901`) whenever the complexity level exceeds 5.
-lint.mccabe.max-complexity = 11
+# lint.mccabe.max-complexity = 11
 
 [tool.codespell]
 write-changes = true

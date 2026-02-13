@@ -47,33 +47,14 @@ Thank you for being involved! :heart_eyes:
 
 ## Setting up development environment
 
-This Python project is fully managed using the [Poetry][poetry] dependency manager. But also relies on the use of NodeJS
-for certain checks during development.
+DevContainer (Recommended)
 
-You need at least:
-
-- Python 3.9+
-- [Poetry][poetry-install]
-- NodeJS 12+ (including NPM)
-
-To install all packages, including all development requirements:
+If you use VS Code with the DevContainer extension:
 
 ```bash
-npm install
-poetry install
-```
-
-As this repository uses the [pre-commit][pre-commit] framework, all changes are linted and tested with each commit. You
-can run all checks and tests manually, using the following command:
-
-```bash
-poetry run pre-commit run --all-files
-```
-
-To run just the Python tests:
-
-```bash
-poetry run pytest
+# Open the project in VS Code
+# Accept the prompt to reopen in DevContainer
+# Environment will be automatically configured
 ```
 
 ## Authors & contributors
@@ -94,9 +75,8 @@ This project is licensed under the AGPLv3 License - see the LICENSE.md file for 
 [contributors]: https://github.com/openmotics/pyhaopenmotics/graphs/contributors
 [woutercoppens]: https://github.com/woutercoppens
 [keepchangelog]: http://keepachangelog.com/en/1.0.0/
-[maintenance-shield]: https://img.shields.io/maintenance/yes/2022.svg
+[maintenance-shield]: https://img.shields.io/maintenance/yes/2026.svg
 [poetry-install]: https://python-poetry.org/docs/#installation
-[poetry]: https://python-poetry.org
 [pre-commit]: https://pre-commit.com/
 [project-stage-shield]: https://img.shields.io/badge/project%20stage-experimental-yellow.svg
 [pypi]: https://pypi.org/project/pyhaopenmotics/
