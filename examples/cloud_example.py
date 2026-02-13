@@ -14,26 +14,25 @@ import asyncio
 import logging
 import os
 
-try:
-    from dotenv import load_dotenv
-except ModuleNotFoundError as exc:
-    msg = "You have to run 'pip install python-dotenv' first"
-    raise ImportError(msg) from exc
+from authlib.integrations.httpx_client import AsyncOAuth2Client
+from dotenv import load_dotenv
 
-try:
-    from authlib.integrations.httpx_client import AsyncOAuth2Client
-except ModuleNotFoundError as exc:
-    msg = "You have to run 'pip install httpx authlib' first"
-    raise ImportError(msg) from exc
-
-
+# try:
+#     from dotenv import load_dotenv
+# except ModuleNotFoundError as exc:
+#     msg = "You have to run 'pip install python-dotenv' first"
+#     raise ImportError(msg) from exc
+# try:
+#     from authlib.integrations.httpx_client import AsyncOAuth2Client
+# except ModuleNotFoundError as exc:
+#     msg = "You have to run 'pip install httpx authlib' first"
+#     raise ImportError(msg) from exc
 from pyhaopenmotics import OpenMoticsCloud
 from pyhaopenmotics.const import CLOUD_SCOPE, OAUTH2_TOKEN
 
-# UNCOMMENT THIS TO SEE ALL THE HTTPX INTERNAL LOGGING
 log = logging.getLogger()
 log.setLevel(logging.DEBUG)
-log_format = logging.Formatter("[%(asctime)s] [%(levelname)s] - %(message)s")
+log_format = logging.Formatter("%(levelname)s [%(asctime)s] %(name)s - %(message)s")
 console = logging.StreamHandler()
 console.setLevel(logging.DEBUG)
 console.setFormatter(log_format)
@@ -57,7 +56,7 @@ async def main() -> None:
     async with AsyncOAuth2Client(
         client_id=client_id,
         client_secret=client_secret,
-        token_endpoint_auth_method="client_secret_post",  # noqa: S106 # nosec
+        token_endpoint_auth_method="client_secret_post",  # nosec
         scope=CLOUD_SCOPE,
         token_endpoint=OAUTH2_TOKEN,
         grant_type="client_credentials",

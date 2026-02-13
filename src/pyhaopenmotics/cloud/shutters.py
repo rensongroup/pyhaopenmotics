@@ -9,7 +9,7 @@ from typing import TYPE_CHECKING, Any
 from .models.shutter import Shutter
 
 if TYPE_CHECKING:
-    from pyhaopenmotics.client.openmoticscloud import (
+    from ..client.openmoticscloud import (
         OpenMoticsCloud,  # pylint: disable=R0401
     )
 
@@ -55,7 +55,7 @@ class OpenMoticsShutters:
         default_filter = '{"usage":"CONTROL"}'
 
         # Renson cloud uses by default usage=CONTROL filter
-        # https://api.openmotics.com/api/v1.1/base/installations/1/outputs?filter={%22usage%22:%22CONTROL%22}
+        # https://api.openmotics.com/api/v1.1/base/installations/1/shutters?filter={%22usage%22:%22CONTROL%22}
         query_params = {"filter": shutter_filter} if shutter_filter else {"filter": default_filter}
 
         body = await self._omcloud.get(

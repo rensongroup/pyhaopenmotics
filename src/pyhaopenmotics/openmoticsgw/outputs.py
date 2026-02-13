@@ -5,12 +5,11 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import TYPE_CHECKING, Any
 
-from pyhaopenmotics.helpers import merge_dicts
-
+from ..helpers import merge_dicts
 from .models.output import Output
 
 if TYPE_CHECKING:
-    from pyhaopenmotics.localgateway import LocalGateway  # pylint: disable=R0401
+    from ..client.localgateway import LocalGateway  # pylint: disable=R0401
 
 
 @dataclass
@@ -122,10 +121,10 @@ class OpenMoticsOutputs:
         if (output := await self.get_by_id(output_id)) is None:
             return None
         try:
-            if output.status.on is True:
+            if output.status.on is True:  # pyright: ignore[reportOptionalMemberAccess]
                 return await self.turn_off(output_id)
             return await self.turn_on(output_id)
-        except (AttributeError, KeyError):
+        except AttributeError, KeyError:
             return None
 
     async def turn_on(

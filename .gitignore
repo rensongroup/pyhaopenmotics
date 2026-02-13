@@ -129,3 +129,5 @@ mkdocs.yml
 .overrides
 
 .early.coverage
+
+.opencode/

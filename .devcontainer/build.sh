@@ -24,9 +24,13 @@ npm install
 # Install Python dependencies
 python3 -m  pip install --upgrade pip
 
-uv sync --extra cli
-uv run pre-commit install
+# Install Dependencies
+uv sync
 
-# required for some local testing
-# python3 -m pip install python-dotenv
-# python3 -m pip install httpx authlib
+# Install pre-commit hooks
+uv tool install pre-commit --with pre-commit-uv --force-reinstall
+uv run pre-commit install --install-hooks
+# uv tool install pre-commit --with pre-commit-uv --force-reinstall
+# uv run pre-commit install
+# uv sync # Install all deps + workspace packages
+uv pip install -r pyproject.toml --extra dev

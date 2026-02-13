@@ -2,77 +2,36 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import Any
 
+from mashumaro.mixins.orjson import DataClassORJSONMixin
+
 
 @dataclass
-class FloorCoordinates:
+class FloorCoordinates(DataClassORJSONMixin):
     """Class holding the floor_coordinates."""
 
-    x: int  # pylint: disable-msg=C0103
-    y: int  # pylint: disable-msg=C0103
-
-    @staticmethod
-    def from_dict(data: dict[str, Any]) -> FloorCoordinates | None:
-        """Get floor coordinates from data.
-
-        Args:
-        ----
-            data: dict
-
-        Returns:
-        -------
-            FloorCoordinates object
-
-        """
-        if "x" not in data or "y" not in data:
-            return None
-
-        return FloorCoordinates(
-            x=data.get("x", 0),
-            y=data.get("y", 0),
-        )
+    x: int = field(default=0)
+    y: int = field(default=0)
 
 
 @dataclass
-class Location:
+class Location(DataClassORJSONMixin):
     """Class holding the location."""
 
-    floor_coordinates: FloorCoordinates | None
-    installation_id: int
-    gateway_id: int
-    floor_id: int
-    room_id: int
+    installation_id: int = field(default=0)
+    gateway_id: int = field(default=0)
+    floor_id: int = field(default=0)
+    room_id: int = field(default=0)
+    floor_coordinates: FloorCoordinates | None = field(default=None)
 
-    @staticmethod
-    def from_dict(data: dict[str, Any]) -> Location:
-        """Get location coordinates from data.
+    @classmethod
+    def __pre_deserialize__(cls, d: dict[Any, Any]) -> dict[Any, Any]:
+        if d.get("room_id") is None and d.get("room") is not None:
+            d["room_id"] = d["room"]
 
-        Args:
-        ----
-            data: dict
-
-        Returns:
-        -------
-            Location object
-
-        """
-        _floor_coordinates: FloorCoordinates | None
-        _room_id: int
-
-        if data is not None:
-            _room_id = data.get("room_id", 0) if "room_id" in data else data.get("room", 0)
-
-            if "floor_coordinates" in data:
-                _floor_coordinates = FloorCoordinates.from_dict(data.get("floor_coordinates", {}))
-            else:
-                _floor_coordinates = None
-
-        return Location(
-            floor_coordinates=_floor_coordinates,
-            installation_id=data.get("installation_id", 0),
-            gateway_id=data.get("gateway_id", 0),
-            floor_id=data.get("floor_id", 0),
-            room_id=_room_id,
-        )
+        fc = d.get("floor_coordinates")
+        if isinstance(fc, dict) and ("x" not in fc or "y" not in fc):
+            d["floor_coordinates"] = None
+        return d

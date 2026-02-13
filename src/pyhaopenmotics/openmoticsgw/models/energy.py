@@ -2,90 +2,46 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import Any
 
+from mashumaro.mixins.orjson import DataClassORJSONMixin
+
+from .base import OpenMoticsBase
+
 
 @dataclass
-class Status:
+class Status(DataClassORJSONMixin):
     """Class holding the status."""
 
-    voltage: float
-    frequency: float
-    current: float
-    power: float
-
-    @staticmethod
-    def from_list(data: list[float]) -> Status:
-        """Return Status object from OpenMotics API response.
-
-        Args:
-        ----
-            data: The data from the OpenMotics API.
-
-        Returns:
-        -------
-            A Status object.
-
-        """
-        return Status(
-            voltage=data[0] if len(data) > 0 else 0,
-            frequency=data[1] if len(data) > 1 else 0,
-            current=data[2] if len(data) > 2 else 0,
-            power=data[3] if len(data) > 3 else 0,
-        )
+    voltage: float = field(default=0.0)
+    frequency: float = field(default=0.0)
+    current: float = field(default=0.0)
+    power: float = field(default=0.0)
 
 
 @dataclass
-class EnergySensor:
-    """Class holding an OpenMotics Energy Sensor.
-
-    # noqa: E800
-    #     {
-    #     "id": <id>,
-    #     "name": "<name>",
-    #     "status": [
-    #         <voltage>,
-    #         <frequency>,
-    #         <current>,
-    #         <power>
-    #     ],
-    #     "inverted: <inverted>
-    # }
-    #     ...
-    """
+class EnergySensor(OpenMoticsBase, DataClassORJSONMixin):
+    """Class holding an OpenMotics Energy Sensor."""
 
     # pylint: disable=too-many-instance-attributes
-    idx: int
-    local_id: int
-    name: str
-    status: Status
-    inverted: bool
+    status: Status | None = field(default=None)
+    inverted: bool = field(default=False)
 
-    @staticmethod
-    def from_dict(data: dict[str, Any]) -> EnergySensor | None:
-        """Return EnergySensor object from OpenMotics API response.
+    @classmethod
+    def __pre_deserialize__(cls, d: dict[Any, Any]) -> dict[Any, Any]:
+        d = super().__pre_deserialize__(d)
 
-        Args:
-        ----
-            data: The data from the OpenMotics API.
+        status_list = d.get("status")
+        if isinstance(status_list, list):
+            d["status"] = {
+                "voltage": status_list[0] if len(status_list) > 0 else 0,
+                "frequency": status_list[1] if len(status_list) > 1 else 0,
+                "current": status_list[2] if len(status_list) > 2 else 0,
+                "power": status_list[3] if len(status_list) > 3 else 0,
+            }
 
-        Returns:
-        -------
-            A EnergySensor object.
-
-        """
-        status = Status.from_list([])
-        if "status" in data:
-            status = Status.from_list(data.get("status", []))
-
-        return EnergySensor(
-            idx=data.get("id", 0),
-            local_id=data.get("id", 0),
-            name=data.get("name", "None"),
-            status=status,
-            inverted=data.get("inverted", False),
-        )
+        return d
 
     def __str__(self) -> str:
         """Represent the class objects as a string.

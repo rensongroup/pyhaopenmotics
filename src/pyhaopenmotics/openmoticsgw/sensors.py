@@ -4,10 +4,10 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Any
 
-from pyhaopenmotics.openmoticsgw.models.sensor import Sensor
+from .models.sensor import Sensor
 
 if TYPE_CHECKING:
-    from pyhaopenmotics.localgateway import LocalGateway  # pylint: disable=R0401
+    from ..client.localgateway import LocalGateway  # pylint: disable=R0401
 
 
 class OpenMoticsSensors:

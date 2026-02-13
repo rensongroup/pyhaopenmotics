@@ -1,9 +1,7 @@
 # Python: Asynchronous Python client for the Openmotics API
 
-[![GitHub Release][releases-shield]][releases]
-[![Python Versions][python-versions-shield]][pypi]
-![Project Stage][project-stage-shield]
-![Project Maintenance][maintenance-shield]
+[![GitHub Release][releases-shield]][releases] [![Python Versions][python-versions-shield]][pypi]
+![Project Stage][project-stage-shield] ![Project Maintenance][maintenance-shield]
 [![License AGPL v3][license-shield]](LICENSE.md)
 
 [![Build Status][build-shield]][build]
@@ -12,11 +10,9 @@ Asynchronous Python client for the OpenMotics API.
 
 ## About
 
-An asynchronous python client for the OpenMotics API to control the outputs
-and other modules.
+An asynchronous python client for the OpenMotics API to control the outputs and other modules.
 
-This library is created to support the integration in
-[Home Assistant](https://www.home-assistant.io).
+This library is created to support the integration in [Home Assistant](https://www.home-assistant.io).
 
 ## Installation
 
@@ -31,13 +27,11 @@ See examples folder.
 
 ## Changelog & Releases
 
-This repository keeps a change log using [GitHub's releases][releases]
-functionality. The format of the log is based on
+This repository keeps a change log using [GitHub's releases][releases] functionality. The format of the log is based on
 [Keep a Changelog][keepchangelog].
 
-Releases are based on [Semantic Versioning][semver], and use the format
-of `MAJOR.MINOR.PATCH`. In a nutshell, the version will be incremented
-based on the following:
+Releases are based on [Semantic Versioning][semver], and use the format of `MAJOR.MINOR.PATCH`. In a nutshell, the
+version will be incremented based on the following:
 
 - `MAJOR`: Incompatible or major changes.
 - `MINOR`: Backwards-compatible new features and enhancements.
@@ -45,19 +39,16 @@ based on the following:
 
 ## Contributing
 
-This is an active open-source project. We are always open to people who want to
-use the code or contribute to it.
+This is an active open-source project. We are always open to people who want to use the code or contribute to it.
 
-We've set up a separate document for our
-[contribution guidelines](CONTRIBUTING.md).
+We've set up a separate document for our [contribution guidelines](CONTRIBUTING.md).
 
 Thank you for being involved! :heart_eyes:
 
 ## Setting up development environment
 
-This Python project is fully managed using the [Poetry][poetry] dependency
-manager. But also relies on the use of NodeJS for certain checks during
-development.
+This Python project is fully managed using the [Poetry][poetry] dependency manager. But also relies on the use of NodeJS
+for certain checks during development.
 
 You need at least:
 
@@ -72,9 +63,8 @@ npm install
 poetry install
 ```
 
-As this repository uses the [pre-commit][pre-commit] framework, all changes
-are linted and tested with each commit. You can run all checks and tests
-manually, using the following command:
+As this repository uses the [pre-commit][pre-commit] framework, all changes are linted and tested with each commit. You
+can run all checks and tests manually, using the following command:
 
 ```bash
 poetry run pre-commit run --all-files
@@ -90,8 +80,7 @@ poetry run pytest
 
 The original setup of this repository is by [Wouter Coppens][woutercoppens].
 
-For a full list of all authors and contributors,
-check [the contributor's page][contributors].
+For a full list of all authors and contributors, check [the contributor's page][contributors].
 
 ## License
 

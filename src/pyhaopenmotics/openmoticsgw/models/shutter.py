@@ -2,180 +2,65 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import Any
 
+from mashumaro import field_options
+from mashumaro.mixins.orjson import DataClassORJSONMixin
+
+from .base import OpenMoticsBase
 from .location import Location
 
 
 @dataclass
-class Status:
+class Status(DataClassORJSONMixin):
     """Class holding the status."""
 
-    locked: bool
-    manual_override: bool
-    state: str
-    position: int
-    last_change: float
-    preset_position: int
-
-    @staticmethod
-    def from_dict(data: dict[str, Any]) -> Status:
-        """Return Status object from OpenMotics API response.
-
-        Args:
-        ----
-            data: The data from the OpenMotics API.
-
-        Returns:
-        -------
-            A Status object.
-
-        """
-        return Status(
-            locked=data.get("locked", False),
-            manual_override=data.get("manual_override", False),
-            state=data.get("state", "None"),
-            position=data.get("position", 0),
-            last_change=data.get("last_change", 0),
-            preset_position=data.get("preset_position", 0),
-        )
+    locked: bool = field(default=False)
+    manual_override: bool = field(default=False)
+    state: str = field(default="None")
+    position: int = field(default=0)
+    last_change: float = field(default=0.0)
+    preset_position: int = field(default=0)
 
 
 @dataclass
-class Attributes:
+class Attributes(DataClassORJSONMixin):
     """Class holding the Attributes."""
 
-    azimuth: str
-    compass_point: str
-    surface_area: str
-
-    @staticmethod
-    def from_dict(data: dict[str, Any]) -> Attributes:
-        """Return Attributes object from OpenMotics API response.
-
-        Args:
-        ----
-            data: The data from the OpenMotics API.
-
-        Returns:
-        -------
-            A Attributes object.
-
-        """
-        return Attributes(
-            azimuth=data.get("azimuth", "None"),
-            compass_point=data.get("compass_point", "None"),
-            surface_area=data.get("surface_area", "None"),
-        )
+    azimuth: str = field(default="None")
+    compass_point: str = field(default="None")
+    surface_area: str = field(default="None")
 
 
 @dataclass
-class Metadata:
+class Metadata(DataClassORJSONMixin):
     """Class holding the Metadata."""
 
-    protocol: str
-    controllable_name: str
-
-    @staticmethod
-    def from_dict(data: dict[str, Any]) -> Metadata:
-        """Return Metadata object from OpenMotics API response.
-
-        Args:
-        ----
-            data: The data from the OpenMotics API.
-
-        Returns:
-        -------
-            A Metata object.
-
-        """
-        return Metadata(
-            protocol=data.get("protocol", "None"),
-            controllable_name=data.get("controllable_name", "None"),
-        )
+    protocol: str = field(default="None")
+    controllable_name: str = field(default="None")
 
 
 @dataclass
-class Shutter:
-    """Object holding an OpenMotics Shutter.
-
-    # noqa: E800
-    # {
-    # "_version": <version>,
-    # "configuration": {
-    #     "group_1": null | <group id>,
-    #     "group_2": null | <group id>,
-    #     "name": "<name>",
-    #     "steps": null | <number of steps>,
-    #     "timer_down": <timer down>,
-    #     "timer_up": <timer up>,
-    #     "up_down_config": <up down configuration>
-    # },
-    # "id": <id>,
-    # "capabilities": ["UP_DOWN", "POSITION", "RELATIVE_POSITION",
-    #          "HW_LOCK"|"CLOUD_LOCK", "PRESET", "CHANGE_PRESET"],
-    # "location": {
-    #     "floor_coordinates": {
-    #         "x": null | <x coordinate>,
-    #         "y": null | <y coordinate>
-    #     },
-    #     "floor_id": null | <floor id>,
-    #     "installation_id": <installation id>,
-    #     "room_id": null | <room_id>
-    # },
-    # "name": "<name>",
-    # "status": {
-    #     "last_change": <epoch in seconds>
-    #     "position": null | <position>,
-    #     "state": null | "UP|DOWN|STOP|GOING_UP|GOING_DOWN",
-    #     "locked": true | false,
-    #     "manual_override": true | false
-    # }
-    # }
-    """
+class Shutter(OpenMoticsBase, DataClassORJSONMixin):
+    """Object holding an OpenMotics Shutter."""
 
     # pylint: disable=too-many-instance-attributes
-    idx: int
-    local_id: int
-    name: str
-    shutter_type: str
-    location: Location
-    capabilities: list[str]
-    attributes: Attributes
-    metadata: Metadata
-    status: Status
-    version: str
+    shutter_type: str = field(metadata=field_options(alias="type"), default="None")
+    location: Location | None = field(default=None)
+    capabilities: list[str] = field(default_factory=list)
+    attributes: Attributes | None = field(default=None)
+    metadata: Metadata | None = field(default=None)
+    status: Status | None = field(default=None)
+    version: str = field(default="0.0")
 
-    @staticmethod
-    def from_dict(data: dict[str, Any]) -> Shutter | None:
-        """Return Shutter object from OpenMotics API response.
-
-        Args:
-        ----
-            data: The data from the OpenMotics API.
-
-        Returns:
-        -------
-            A Shutter object.
-
-        """
-        status = Status.from_dict({})
-        if "status" in data:
-            status = Status.from_dict(data.get("status", {}))
-
-        return Shutter(
-            idx=data.get("id", 0),
-            local_id=data.get("id", 0),
-            name=data.get("name", "None"),
-            shutter_type=data.get("type", "None"),
-            location=Location.from_dict(data),
-            capabilities=data.get("capabilities", "None"),
-            attributes=Attributes.from_dict(data),
-            metadata=Metadata.from_dict(data),
-            status=status,
-            version=data.get("version", "0.0"),
-        )
+    @classmethod
+    def __pre_deserialize__(cls, d: dict[Any, Any]) -> dict[Any, Any]:
+        d = super().__pre_deserialize__(d)
+        d["location"] = d.copy()
+        d["attributes"] = d.copy()
+        d["metadata"] = d.copy()
+        return d
 
     def __str__(self) -> str:
         """Represent the class objects as a string.

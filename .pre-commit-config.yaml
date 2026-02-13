@@ -1,140 +1,149 @@
 ---
+# pre-commit.ci config
 ci:
-  # format compatible with commitlint
-  autoupdate_commit_msg: "chore: pre-commit autoupdate"
+  # TODO: enable pre-commit.ci repository access
+  autoupdate_commit_msg: "[pre-commit.ci] 🔧 pre-commit autoupdate"
+  autofix_commit_msg: "[pre-commit.ci] 🎨 pre-commit fixes"
   autoupdate_schedule: monthly
-  autofix_commit_msg: |
-    chore: auto fixes from pre-commit.com hooks
 
-    for more information, see https://pre-commit.ci
-  skip:
-    - pip-compile
 repos:
-  - repo: local
+  # pyproject.toml
+  - repo: https://github.com/henryiii/validate-pyproject-schema-store
+    rev: 2026.01.22
+    hooks:
+      - id: validate-pyproject
+
+  # Sync Python and pre-commit package versions
+  # pyproject.toml -> uv.lock
+  - repo: https://github.com/astral-sh/uv-pre-commit
+    rev: 0.10.2
+    hooks:
+      - id: uv-lock
+
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v6.0.0
+    hooks:
+      - id: check-added-large-files
+        exclude: .mypy_cache
+      - id: check-ast
+      - id: check-builtin-literals
+      - id: check-case-conflict
+      - id: check-executables-have-shebangs
+      - id: check-json
+        exclude: (.vscode|.devcontainer)
+      - id: check-shebang-scripts-are-executable
+      - id: check-symlinks
+      - id: check-toml
+      - id: check-xml
+      - id: check-yaml
+        exclude: mkdocs\.yml$|config/configuration.yaml
+      - id: debug-statements
+      - id: destroyed-symlinks
+      - id: end-of-file-fixer
+        exclude: .mypy_cache|node_modules
+      - id: fix-byte-order-marker
+      - id: forbid-submodules
+      - id: mixed-line-ending
+      - id: pretty-format-json
+        args: [--autofix]
+        exclude: (.vscode|.devcontainer)
+        # exclude: ^$|.devcontainer
+        # exclude: node_modules|.mypy_cache
+      - id: trailing-whitespace
+      - id: check-merge-conflict
+      - id: no-commit-to-branch
+        args:
+          - --branch=devel
+          - --branch=master
+
+  - repo: https://github.com/tox-dev/pyproject-fmt
+    rev: "v2.15.3"
+    hooks:
+      - id: pyproject-fmt
+
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.15.0
     hooks:
       - id: ruff-check
-        name: 🐶 Ruff Linter
-        language: system
-        types: [python]
-        entry: uv run ruff check --fix
+        args: [--fix]
         exclude: ^examples|^tests
-        require_serial: true
-        stages: [pre-commit, pre-push, manual]
       - id: ruff-format
-        name: 🐶 Ruff Formatter
-        language: system
-        types: [python]
-        entry: uv run ruff format
-        require_serial: true
-        stages: [pre-commit, pre-push, manual]
-      - id: check-ast
-        name: 🐍 Check Python AST
-        language: system
-        types: [python]
-        entry: uv run check-ast
-      - id: check-case-conflict
-        name: 🔠 Check for case conflicts
-        language: system
-        entry: uv run check-case-conflict
-      - id: check-docstring-first
-        name: ℹ️  Check docstring is first
-        language: system
-        types: [python]
-        entry: uv run check-docstring-first
-      - id: check-executables-have-shebangs
-        name: 🧐 Check that executables have shebangs
-        language: system
-        types: [text, executable]
-        entry: uv run check-executables-have-shebangs
-        stages: [pre-commit, pre-push, manual]
-      - id: check-json
-        name: ｛ Check JSON files
-        language: system
-        types: [json]
-        entry: uv run check-json
-      - id: check-merge-conflict
-        name: 💥 Check for merge conflicts
-        language: system
-        types: [text]
-        entry: uv run check-merge-conflict
-      - id: check-symlinks
-        name: 🔗 Check for broken symlinks
-        language: system
-        types: [symlink]
-        entry: uv run check-symlinks
-      - id: check-toml
-        name: ✅ Check TOML files
-        language: system
-        types: [toml]
-        entry: uv run check-toml
-      - id: check-xml
-        name: ✅ Check XML files
-        entry: check-xml
-        language: system
-        types: [xml]
-      - id: check-yaml
-        name: ✅ Check YAML files
-        language: system
-        types: [yaml]
-        entry: uv run check-yaml
+        exclude: ^examples|^tests
+
+  - repo: https://github.com/python-jsonschema/check-jsonschema
+    rev: 0.36.1
+    hooks:
+      - id: check-github-workflows
+
+    # codespell is a tool to find and fix common misspellings in text files.
+  - repo: https://github.com/codespell-project/codespell
+    rev: v2.4.1
+    hooks:
       - id: codespell
-        name: ✅ Check code for common misspellings
-        language: system
-        types: [text]
-        exclude: ^uv\.lock$
-        entry: uv run codespell
-      - id: detect-private-key
-        name: 🕵️  Detect Private Keys
-        language: system
-        types: [text]
-        entry: uv run detect-private-key
-      - id: end-of-file-fixer
-        name: ⮐  Fix End of Files
-        language: system
-        types: [text]
-        entry: uv run end-of-file-fixer
-        stages: [pre-commit, pre-push, manual]
-      - id: mypy
-        name: 🆎 Static type checking using mypy
-        language: system
-        types: [python]
-        entry: uv run mypy
-        exclude: ^docs/|^tests|^examples
-        require_serial: true
-      - id: no-commit-to-branch
-        name: 🛑 Don't commit to main branch
-        language: system
-        entry: uv run no-commit-to-branch
-        pass_filenames: false
-        always_run: true
-        args:
-          - --branch=main
+        additional_dependencies: ["tomli>=2.4"]
+
+  - repo: https://github.com/abravalheri/validate-pyproject
+    rev: v0.25
+    hooks:
+      - id: validate-pyproject
+
+  # Bandit is a tool designed to find common security issues in Python code.
+  # - repo: https://github.com/PyCQA/bandit
+  #   rev: 1.9.3
+  #   hooks:
+  #     - id: bandit
+  #       args: ["-c", "pyproject.toml"]
+  #       additional_dependencies: ["bandit[toml]"]
+
+  # - repo: https://github.com/adrienverge/yamllint.git
+  #   rev: v1.38.0
+  #   hooks:
+  #     - id: yamllint
+  #       exclude: .github
+
+  - repo: https://github.com/rbubley/mirrors-prettier
+    rev: "v3.8.1"
+    hooks:
       - id: prettier
-        name: 💄 Ensuring files are prettier
-        language: system
-        types: [yaml, json, markdown]
-        entry: npm run prettier
-        pass_filenames: false
+        name: Prettier non-workflow files
+        args: ["--print-width=120", "--prose-wrap=always"]
+        exclude: ".github/workflows/"
+      - id: prettier
+        name: Prettier workflow files
+        args: ["--print-width=240", "--prose-wrap=always"]
+        exclude: "^(?!.github/workflows/)"
+
+  - repo: https://github.com/cdce8p/python-typing-update
+    rev: v0.8.1
+    hooks:
+      # Run `python-typing-update` hook manually from time to time
+      # to update python typing syntax.
+      # Will require manual work, before submitting changes!
+      # pre-commit run --hook-stage manual python-typing-update --all-files
+      - id: python-typing-update
+        stages: [manual]
+        args:
+          - --py314-plus
+          - --force
+          - --keep-updates
+
+  - repo: https://github.com/asottile/pyupgrade
+    rev: v3.21.2
+    hooks:
+      - id: pyupgrade
+
+  - repo: https://github.com/PyCQA/pylint
+    rev: v4.0.4
+    hooks:
       - id: pylint
-        name: 🌟 Starring code with pylint
-        language: system
-        types: [python]
-        entry: uv run pylint
-        exclude: ^docs/|^tests|^examples
-      - id: pytest
-        name: 🧪 Running tests and test coverage with pytest
-        language: system
-        types: [python]
-        entry: uv run pytest
-        pass_filenames: false
-      - id: trailing-whitespace
-        name: ✄  Trim Trailing Whitespace
-        language: system
-        types: [text]
-        entry: uv run trailing-whitespace-fixer
-        stages: [pre-commit, pre-push, manual]
-      - id: yamllint
-        name: 🎗  Check YAML files with yamllint
-        language: system
-        types: [yaml]
-        entry: uv run yamllint
+        args: ["--rcfile=.pylintrc"]
+        # Only run on non-test Python files like GitHub
+        files: '^(?!.*tests/).*\.py$'
+
+        additional_dependencies:
+          - pytest
+
+  - repo: https://github.com/RobertCraigie/pyright-python
+    rev: v1.1.408
+    hooks:
+      - id: pyright

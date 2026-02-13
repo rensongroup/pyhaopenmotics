@@ -2,16 +2,16 @@
 
 from pyhaopenmotics.cloud.models import Installation
 
-from .errors import (
+from .client.errors import (
     AuthenticationError,
     OpenMoticsConnectionError,
     OpenMoticsConnectionSslError,
     OpenMoticsConnectionTimeoutError,
     OpenMoticsError,
 )
+from .client.localgateway import LocalGateway
+from .client.openmoticscloud import OpenMoticsCloud
 from .helpers import get_ssl_context
-from .localgateway import LocalGateway
-from .openmoticscloud import OpenMoticsCloud
 
 __all__ = [
     "AuthenticationError",

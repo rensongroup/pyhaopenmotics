@@ -6,10 +6,10 @@ from dataclasses import dataclass
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from pyhaopenmotics.client.openmoticscloud import (
+    from ..client.openmoticscloud import (
         OpenMoticsCloud,  # pylint: disable=R0401
     )
-    from pyhaopenmotics.cloud.models.energy import EnergySensor
+    from .models.energy import EnergySensor
 
 ####################################################################################
 #

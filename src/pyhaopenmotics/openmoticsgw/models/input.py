@@ -2,99 +2,44 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import Any
 
+from mashumaro import field_options
+from mashumaro.mixins.orjson import DataClassORJSONMixin
+
+from .base import OpenMoticsBase
+
 
 @dataclass
-class Status:
+class Status(DataClassORJSONMixin):
     """Class holding the status."""
 
-    on: bool
-    locked: bool
-    value: int
+    on: bool = field(default=False)
+    locked: bool = field(default=False)
+    value: int = field(metadata=field_options(alias="dimmer"), default=0)
 
-    @staticmethod
-    def from_dict(data: dict[str, Any]) -> Status:
-        """Return Status object from OpenMotics API response.
-
-        Args:
-        ----
-            data: The data from the OpenMotics API.
-
-        Returns:
-        -------
-            A Status object.
-
-        """
-        return Status(
-            # on = True if status = 1
-            on=data.get("status") == 1,
-            locked=data.get("locked", False),
-            value=data.get("dimmer", 0),
-        )
+    @classmethod
+    def __pre_deserialize__(cls, d: dict[Any, Any]) -> dict[Any, Any]:
+        if d.get("status") == 1:
+            d["on"] = True
+        return d
 
 
 @dataclass
-class OMInput:
-    """Class holding an OpenMotics Input.
-
-    # noqa: E800
-    # [{
-    #     'name': 'name1',
-    #     'type': 'OUTLET',
-    #     'capabilities': ['ON_OFF'],
-    #     'location': {'floor_coordinates': {'x': None, 'y': None},
-    #          'installation_id': 21,
-    #          'gateway_id': 408,
-    #          'floor_id': None,
-    #          'room_id': None},
-    #     'metadata': None,
-    #     'status': {'on': False, 'locked': False, 'manual_override': False},
-    #     'last_state_change': 1633099611.275243,
-    #     'id': 18,
-    #     '_version': 1.0
-    #     },{
-    #     'name': 'name2',
-    #     'type': 'OUTLET',
-    #     ...
-    """
+class OMInput(OpenMoticsBase, DataClassORJSONMixin):
+    """Class holding an OpenMotics Input."""
 
     # pylint: disable=too-many-instance-attributes
-    idx: int
-    local_id: int
-    name: str
-    status: Status
-    last_state_change: float
-    room: int
-    version: str
+    status: Status | None = field(default=None)
+    last_state_change: float = field(default=0.0)
+    room: int = field(default=0)
+    version: str = field(default="0.0")
 
-    @staticmethod
-    def from_dict(data: dict[str, Any]) -> OMInput | None:
-        """Return Input object from OpenMotics API response.
-
-        Args:
-        ----
-            data: The data from the OpenMotics API.
-
-        Returns:
-        -------
-            A INput object.
-
-        """
-        status = Status.from_dict({})
-        if "status" in data:
-            status = Status.from_dict(data.get("status", {}))
-
-        return OMInput(
-            idx=data.get("id", 0),
-            local_id=data.get("id", 0),
-            name=data.get("name", "None"),
-            status=status,
-            last_state_change=data.get("last_state_change"),
-            room=data.get("room", "None"),
-            version=data.get("version", "0.0"),
-        )
+    @classmethod
+    def __pre_deserialize__(cls, d: dict[Any, Any]) -> dict[Any, Any]:
+        d = super().__pre_deserialize__(d)
+        return d
 
     def __str__(self) -> str:
         """Represent the class objects as a string.

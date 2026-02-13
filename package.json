@@ -4,7 +4,7 @@
   "devDependencies": {
     "prettier": "^3.7.4",
     "pyright": "^1.1.408"
-      },
+  },
   "license": "AGPLv3",
   "name": "pyhaopenmotics",
   "private": true,
