@@ -8,7 +8,7 @@ on:
   workflow_dispatch:
 
 env:
-  DEFAULT_PYTHON: "3.13"
+  DEFAULT_PYTHON: "3.14"
 
 jobs:
   pytest:
@@ -26,7 +26,7 @@ jobs:
           enable-cache: true
           python-version: ${{ env.DEFAULT_PYTHON }}
       - name: 🏗 Install dependencies
-        run: uv sync --extra cli --frozen --dev
+        run: uv sync --frozen --dev
       - name: 🚀 Run pytest
         run: uv run pytest --cov openmotics tests
       - name: ⬆️ Upload coverage artifact
