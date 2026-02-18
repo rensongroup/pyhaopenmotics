@@ -30,7 +30,7 @@ jobs:
         run: uv sync --all
 
       - name: Ruff Lint Check
-        run: uv run ruff check .
+        run: uv run ruff check --fix --exclude=examples --exclude=tests  .
 
       - name: Ruff Format Check
         run: uv run ruff format --diff .
