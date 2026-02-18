@@ -15,7 +15,7 @@ jobs:
       matrix:
         python-version:
           - "3.14"
-          
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v6
@@ -37,6 +37,6 @@ jobs:
 
       - name: Python Type Checks (Pyrefly)
         run: uv run pyrefly check -c pyproject.toml
-        
+
       - name: Test with pytest
         run: uv run pytest

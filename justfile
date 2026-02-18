@@ -7,7 +7,7 @@ default:
 
 # Install dependencies (prek, ruff, etc.)
 install:
-    uv sync --all-extras
+    uv sync --all-extras --group dev
 
 # Install only production dependencies
 install-prod:
@@ -40,7 +40,7 @@ test-func FILE FUNC:
 
 # Lint with ruff
 lint:
-    uv run ruff check --fix --exclude=examples --exclude=tests  .
+    uv run ruff format --diff .
 
 # Format code with ruff
 format:

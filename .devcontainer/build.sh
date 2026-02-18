@@ -33,4 +33,4 @@ uv run prek install
 # uv pip install -r pyproject.toml --extra dev
 
 # Install Dependencies
-uv sync --all-extras
+uv sync --all-extras --group dev
