@@ -121,7 +121,8 @@ class OpenMoticsOutputs:
         if (output := await self.get_by_id(output_id)) is None:
             return None
         try:
-            if output.status.on is True:  # pyright: ignore[reportOptionalMemberAccess]
+            # pyrefly: ignore
+            if output.status.on is True:
                 return await self.turn_off(output_id)
             return await self.turn_on(output_id)
         except AttributeError, KeyError:

@@ -81,7 +81,7 @@ coverage.xml
 docs/_build/
 
 # pyenv
-.python-version
+# .python-version
 
 # virtualenv
 .venv
@@ -123,8 +123,6 @@ node_modules/
 
 # Local cache
 .ruff_cache
-crates/ruff/resources/test/cpython
-docs/
 mkdocs.yml
 .overrides
 

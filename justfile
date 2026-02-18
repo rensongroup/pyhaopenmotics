@@ -5,25 +5,13 @@
 default:
     @just --list
 
-# Install dependencies
+# Install dependencies (prek, ruff, etc.)
 install:
     uv sync --all-extras
-
-# Install dev dependencies (pre-commit, etc.)
-install-dev:
-    uv sync --group dev
 
 # Install only production dependencies
 install-prod:
     uv sync
-
-# Install with test dependencies
-install-test:
-    uv sync --extra test
-
-# Install with docs dependencies
-install-docs:
-    uv sync --extra docs
 
 # Upgrade all dependencies to their latest versions
 upgrade:
@@ -87,21 +75,21 @@ clean:
 
 # Install pre-commit hooks
 pre-commit-install:
-    uv run pre-commit install
+    uv run prek install
+
+# Install pre-commit hooks
+pre-commit-upgrade:
+    uv run prek auto-update
 
 # Run pre-commit hooks on all files
 pre-commit-run:
-    uv run pre-commit run --all-files
-
-# Run pre-commit hooks on staged files only
-pre-commit-staged:
-    uv run pre-commit run
+    uv run prek run --all-files
 
 # Run all checks (lint, format, tests) before committing
 pre-commit:
     just lint
     just format-check
-    just test-fast
+    just test
 
 # Show Python version
 python-version:

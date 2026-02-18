@@ -11,8 +11,9 @@
       "extensions": [
         "ms-python.python", // Base Python support (interpreter, debugging)
         "ms-python.debugpy", // Python debugger
-        "ms-python.vscode-pylance", // IntelliSense, type hints (until ty has IDE plugin)
+        // "ms-python.vscode-pylance", // IntelliSense, type hints (until ty has IDE plugin)
         "charliermarsh.ruff", // Ruff: single tool for linting + formatting
+        "meta.pyrefly", // Pyrefly: AI code completion
         "ms-python.vscode-python-envs", // Python environment management
         "tamasfe.even-better-toml", // TOML support for pyproject.toml
         "editorconfig.editorconfig", // EditorConfig support

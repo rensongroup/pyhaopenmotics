@@ -1,6 +1,7 @@
 # Contributing to Asynchronous Python client for the Openmotics API
 
-Thank you for your interest in contributing to the Openmotics API integration! This document provides guidelines for contributing to the project.
+Thank you for your interest in contributing to the Openmotics API integration! This document provides guidelines for
+contributing to the project.
 
 ## Table of Contents
 
@@ -17,7 +18,9 @@ Thank you for your interest in contributing to the Openmotics API integration! T
 
 ## Code of Conduct
 
-This project follows the [Contributor Covenant Code of Conduct](https://www.contributor-covenant.org/version/2/1/code_of_conduct/). By participating, you are expected to uphold this code.
+This project follows the
+[Contributor Covenant Code of Conduct](https://www.contributor-covenant.org/version/2/1/code_of_conduct/). By
+participating, you are expected to uphold this code.
 
 ---
 
@@ -248,6 +251,7 @@ open htmlcov/index.html
 1. **Fork the repository** (external contributors) or create a branch (maintainers)
 
 2. **Create a feature branch** from `main`:
+
    ```bash
    git checkout main
    git pull origin main
@@ -260,6 +264,7 @@ open htmlcov/index.html
    - Update documentation if needed
 
 4. **Run quality checks**:
+
    ```bash
    # Run tests
    pytest --cov=pyhaopenmotics tests
@@ -269,12 +274,14 @@ open htmlcov/index.html
    ```
 
 5. **Commit your changes**:
+
    ```bash
    git add .
    git commit -m "feat: Add support for new device type"
    ```
 
 6. **Push to your fork/branch**:
+
    ```bash
    git push -u origin feature/my-feature
    ```
@@ -349,12 +356,12 @@ Use the appropriate issue template:
 - **Question**: Ask for help or clarification
 
 **Include**:
+
 - Home Assistant version
 - Integration version
 - CCU/hub type and version
 - Device model (if device-specific)
 - Relevant logs (enable debug logging if needed)
-
 
 ---
 

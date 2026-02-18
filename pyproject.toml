@@ -29,25 +29,48 @@ dependencies = [
   "websockets>=15",
   "yarl>=1.18",
 ]
-optional-dependencies.build = [ "hatch" ]
-optional-dependencies.dev = [
+# optional-dependencies.build = ["hatch"]
+# optional-dependencies.dev = [
+# "authlib",
+# "deptry",
+# "hatch",
+# "httpx",
+# "prek",
+# "pyright",
+# "pytest",
+# "pytest-asyncio",
+# "pytest-cov",
+# "pytest-mock",
+# "python-dotenv",
+# "ruff",
+# "ty",
+# "tox-uv",
+# ]
+urls.changelog = "https://github.com/rensongroup/pyhaopenmotics/releases"
+urls.issues = "https://github.com/rensongroup/pyhaopenmotics/issues"
+urls.repository = "https://github.com/rensongroup/pyhaopenmotics"
+
+[dependency-groups]
+dev = [
+  { include-group = "lint" },
+  { include-group = "test" },
+  { include-group = "tools" },
+]
+test = [
   "authlib",
-  "deptry",
-  "hatch",
+  "coverage",
   "httpx",
-  "pre-commit",
-  "pyright",
+  "ipdb",
   "pytest",
   "pytest-asyncio",
   "pytest-cov",
   "pytest-mock",
   "python-dotenv",
-  "ruff",
-  "tox-uv",
+  "ty",
 ]
-urls.Changelog = "https://github.com/rensongroup/pyhaopenmotics/releases"
-urls.Issues = "https://github.com/rensongroup/pyhaopenmotics/issues"
-urls.Repository = "https://github.com/rensongroup/pyhaopenmotics"
+docs = [ "mkdocs" ]
+lint = [ "pyrefly", "ruff" ]
+tools = [ "ruff", "rust-just" ]
 
 [tool.hatch]
 version.path = "src/pyhaopenmotics/__version__.py"
@@ -115,6 +138,13 @@ ini_options.asyncio_mode = "auto"
 run.branch = true
 run.source = [ "src/pyhaopenmotics" ]
 report.skip_empty = true
+
+[tool.pyrefly]
+project-includes = [ "src" ]
+project-excludes = [ "examples", "tests" ]
+infer-with-first-use = false
+errors.bad-argument-type = "ignore"
+errors.bad-override = "ignore"
 
 [tool.pyright]
 venvPath = "."
