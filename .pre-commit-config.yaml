@@ -9,7 +9,7 @@ ci:
 repos:
   # pyproject.toml
   - repo: https://github.com/henryiii/validate-pyproject-schema-store
-    rev: 2026.02.15
+    rev: 2026.02.20
     hooks:
       - id: validate-pyproject
 
@@ -62,7 +62,7 @@ repos:
       - id: pyproject-fmt
 
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.15.1
+    rev: v0.15.2
     hooks:
       - id: ruff-check
         args: [--fix]
@@ -107,7 +107,7 @@ repos:
       - id: prettier
         name: Prettier non-workflow files
         args: ["--print-width=120", "--prose-wrap=always"]
-        exclude: ".github/workflows/"
+        exclude: ".github/workflows/|^AGENTS.md"
       - id: prettier
         name: Prettier workflow files
         args: ["--print-width=240", "--prose-wrap=always"]
@@ -133,7 +133,7 @@ repos:
       - id: pyupgrade
 
   - repo: https://github.com/PyCQA/pylint
-    rev: v4.0.4
+    rev: v4.0.5
     hooks:
       - id: pylint
         args: ["--rcfile=.pylintrc"]

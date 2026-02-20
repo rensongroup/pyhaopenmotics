@@ -15,11 +15,11 @@ fi
 sudo apt update
 sudo apt-get upgrade -y
 
-. ${NVM_DIR}/nvm.sh
-nvm install
-nvm use
+# . ${NVM_DIR}/nvm.sh
+# nvm install
+# nvm use
 
-npm install
+# npm install
 
 # Install Python dependencies
 python3 -m  pip install --upgrade pip
