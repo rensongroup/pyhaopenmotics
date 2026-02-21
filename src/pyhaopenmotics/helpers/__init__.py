@@ -25,7 +25,8 @@ def get_key_for_word(dictionary: dict[str, Any], word: str) -> Any:
 
     except KeyError as err:
         msg = f"Key Error: {err}"
-        logging.exception(msg)
+        logger = logging.getLogger(__name__)
+        logger.exception(msg)
 
     return None
 

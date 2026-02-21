@@ -6,8 +6,6 @@ import base64
 import logging
 from typing import TYPE_CHECKING, Any
 
-import aiohttp
-
 # import websocket
 # from websockets import connect
 from yarl import URL
@@ -26,6 +24,8 @@ from pyhaopenmotics.const import CLOUD_API_URL
 
 if TYPE_CHECKING:
     from collections.abc import Awaitable, Callable
+
+    import aiohttp
 
     from pyhaopenmotics.cloud.models.installation import Installation
 

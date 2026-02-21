@@ -2,6 +2,7 @@ from unittest.mock import AsyncMock, MagicMock
 
 import aiohttp
 import pytest
+
 from pyhaopenmotics import OpenMoticsCloud, OpenMoticsConnectionError, OpenMoticsConnectionTimeoutError
 
 
@@ -12,7 +13,7 @@ def openmotics_cloud():
 
 
 @pytest.mark.asyncio
-async def test_get_request(openmotics_cloud):
+async def test_get_request(openmotics_cloud) -> None:
     mock_response = AsyncMock()
     mock_response.status = 200
     mock_response.headers = {"Content-Type": "application/json"}
@@ -24,13 +25,13 @@ async def test_get_request(openmotics_cloud):
     assert response == {"key": "value"}
 
     # Check if request was called correctly
-    args, kwargs = openmotics_cloud.session.request.call_args
+    args, _kwargs = openmotics_cloud.session.request.call_args
     assert args[0] == "GET"
     assert str(args[1]) == "https://api.openmotics.com/api/v1.1/test"
 
 
 @pytest.mark.asyncio
-async def test_post_request(openmotics_cloud):
+async def test_post_request(openmotics_cloud) -> None:
     mock_response = AsyncMock()
     mock_response.status = 200
     mock_response.headers = {"Content-Type": "application/json"}
@@ -47,7 +48,7 @@ async def test_post_request(openmotics_cloud):
 
 
 @pytest.mark.asyncio
-async def test_request_timeout(openmotics_cloud):
+async def test_request_timeout(openmotics_cloud) -> None:
     openmotics_cloud.session.request.side_effect = TimeoutError()
 
     with pytest.raises(OpenMoticsConnectionTimeoutError):
@@ -55,7 +56,7 @@ async def test_request_timeout(openmotics_cloud):
 
 
 @pytest.mark.asyncio
-async def test_request_connection_error(openmotics_cloud):
+async def test_request_connection_error(openmotics_cloud) -> None:
     openmotics_cloud.session.request.side_effect = aiohttp.ClientError("Error")
 
     with pytest.raises(OpenMoticsConnectionError):
@@ -63,14 +64,14 @@ async def test_request_connection_error(openmotics_cloud):
 
 
 @pytest.mark.asyncio
-async def test_invalid_token():
+async def test_invalid_token() -> None:
     session = AsyncMock(spec=aiohttp.ClientSession)
     cloud = OpenMoticsCloud(token=None, session=session)
     assert cloud.token is None
 
 
 @pytest.mark.asyncio
-async def test_invalid_url(openmotics_cloud):
+async def test_invalid_url(openmotics_cloud) -> None:
     openmotics_cloud.session.request.side_effect = aiohttp.ClientError("Error")
 
     with pytest.raises(OpenMoticsConnectionError):
@@ -78,7 +79,7 @@ async def test_invalid_url(openmotics_cloud):
 
 
 @pytest.mark.asyncio
-async def test_get_request_with_params(openmotics_cloud):
+async def test_get_request_with_params(openmotics_cloud) -> None:
     mock_response = AsyncMock()
     mock_response.status = 200
     mock_response.headers = {"Content-Type": "application/json"}
@@ -89,12 +90,12 @@ async def test_get_request_with_params(openmotics_cloud):
     response = await openmotics_cloud.get("/test", params={"param": "value"})
     assert response == {"key": "value"}
 
-    args, kwargs = openmotics_cloud.session.request.call_args
+    _args, kwargs = openmotics_cloud.session.request.call_args
     assert kwargs["params"] == {"param": "value"}
 
 
 @pytest.mark.asyncio
-async def test_post_request_with_data(openmotics_cloud):
+async def test_post_request_with_data(openmotics_cloud) -> None:
     mock_response = AsyncMock()
     mock_response.status = 200
     mock_response.headers = {"Content-Type": "application/json"}
@@ -107,7 +108,7 @@ async def test_post_request_with_data(openmotics_cloud):
 
 
 @pytest.mark.asyncio
-async def test_request_with_invalid_json(openmotics_cloud):
+async def test_request_with_invalid_json(openmotics_cloud) -> None:
     mock_response = AsyncMock()
     mock_response.status = 200
     mock_response.headers = {"Content-Type": "text/plain"}
@@ -120,7 +121,7 @@ async def test_request_with_invalid_json(openmotics_cloud):
 
 
 @pytest.mark.asyncio
-async def test_request_with_404_error(openmotics_cloud):
+async def test_request_with_404_error(openmotics_cloud) -> None:
     mock_response = AsyncMock()
     mock_response.status = 404
     mock_response.headers = {}
@@ -136,7 +137,7 @@ async def test_request_with_404_error(openmotics_cloud):
 
 
 @pytest.mark.asyncio
-async def test_request_with_500_error(openmotics_cloud):
+async def test_request_with_500_error(openmotics_cloud) -> None:
     mock_response = AsyncMock()
     mock_response.status = 500
     mock_response.headers = {}
@@ -152,7 +153,7 @@ async def test_request_with_500_error(openmotics_cloud):
 
 
 @pytest.mark.asyncio
-async def test_close_session(openmotics_cloud):
+async def test_close_session(openmotics_cloud) -> None:
     openmotics_cloud._close_session = True
     session_mock = openmotics_cloud.session
     await openmotics_cloud.close()
@@ -160,18 +161,18 @@ async def test_close_session(openmotics_cloud):
 
 
 @pytest.mark.asyncio
-async def test_installation_id_property(openmotics_cloud):
+async def test_installation_id_property(openmotics_cloud) -> None:
     openmotics_cloud.installation_id = 123
     assert openmotics_cloud.installation_id == 123
 
 
 @pytest.mark.asyncio
-async def test_user_agent(openmotics_cloud):
+async def test_user_agent(openmotics_cloud) -> None:
     assert openmotics_cloud.user_agent.startswith("PyHAOpenMotics/")
 
 
 @pytest.mark.asyncio
-async def test_init_options():
+async def test_init_options() -> None:
     session = AsyncMock(spec=aiohttp.ClientSession)
     cloud = OpenMoticsCloud(
         token="test_token",
@@ -186,7 +187,7 @@ async def test_init_options():
 
 
 @pytest.mark.asyncio
-async def test_get_url(openmotics_cloud):
+async def test_get_url(openmotics_cloud) -> None:
     url = await openmotics_cloud._get_url("/test")
     assert url == "https://api.openmotics.com/api/v1.1/test"
 
@@ -199,7 +200,7 @@ async def test_get_url(openmotics_cloud):
 
 
 @pytest.mark.asyncio
-async def test_get_auth_headers(openmotics_cloud):
+async def test_get_auth_headers(openmotics_cloud) -> None:
     headers = await openmotics_cloud._get_auth_headers()
     assert "Authorization" in headers
     assert headers["Authorization"] == "Bearer test_token"
@@ -208,13 +209,13 @@ async def test_get_auth_headers(openmotics_cloud):
 
 
 @pytest.mark.asyncio
-async def test_ws_connection_url(openmotics_cloud):
+async def test_ws_connection_url(openmotics_cloud) -> None:
     url = await openmotics_cloud._get_ws_connection_url()
     assert url == "wss://api.openmotics.com/api/v1.1/ws/events"
 
 
 @pytest.mark.asyncio
-async def test_ws_headers(openmotics_cloud):
+async def test_ws_headers(openmotics_cloud) -> None:
     import base64
 
     headers = await openmotics_cloud._get_ws_headers()
@@ -225,7 +226,7 @@ async def test_ws_headers(openmotics_cloud):
 
 
 @pytest.mark.asyncio
-async def test_ws_headers_with_extra_headers(openmotics_cloud):
+async def test_ws_headers_with_extra_headers(openmotics_cloud) -> None:
     extra_headers = {"X-Test": "True"}
     headers = await openmotics_cloud._get_ws_headers(extra_headers)
     assert "X-Test" in headers
@@ -234,7 +235,7 @@ async def test_ws_headers_with_extra_headers(openmotics_cloud):
 
 
 @pytest.mark.asyncio
-async def test_installations_property(openmotics_cloud):
+async def test_installations_property(openmotics_cloud) -> None:
     from pyhaopenmotics.cloud.installations import OpenMoticsInstallations
 
     installations = openmotics_cloud.installations

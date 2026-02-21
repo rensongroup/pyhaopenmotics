@@ -240,6 +240,10 @@ class OpenMoticsThermostatUnits:
             Dict with all ThermostatUnit
 
         """
+        if thermostatunit_filter is not None:
+            # implemented later
+            pass
+
         ###############################################################################
         # Code has changed in latest version of gateway:
         #      get_thermostat_configurations does NOT exist anymore

@@ -1,6 +1,7 @@
 from unittest.mock import AsyncMock
 
 import pytest
+
 from pyhaopenmotics import OpenMoticsCloud
 from pyhaopenmotics.cloud.models.ventilation import VentilationUnit
 from pyhaopenmotics.cloud.ventilations import OpenMoticsVentilationUnits
@@ -14,7 +15,7 @@ def mock_cloud_client():
 
 
 @pytest.mark.asyncio
-async def test_ventilations_get_all(mock_cloud_client):
+async def test_ventilations_get_all(mock_cloud_client) -> None:
     ventilation_units = OpenMoticsVentilationUnits(mock_cloud_client)
 
     mock_data = {"data": [{"id": 1, "name": "Unit 1", "status": {"state": "ON", "mode": "AUTO"}, "local_id": 101}]}
@@ -31,7 +32,7 @@ async def test_ventilations_get_all(mock_cloud_client):
 
 
 @pytest.mark.asyncio
-async def test_ventilations_get_by_id(mock_cloud_client):
+async def test_ventilations_get_by_id(mock_cloud_client) -> None:
     ventilation_units = OpenMoticsVentilationUnits(mock_cloud_client)
 
     mock_data = {"data": {"id": 1, "name": "Unit 1", "status": {"state": "ON", "mode": "AUTO"}, "local_id": 101}}
@@ -50,7 +51,7 @@ from pyhaopenmotics.cloud.energy import OpenMoticsEnergySensors
 
 
 @pytest.mark.asyncio
-async def test_energy_sensors_get_all(mock_cloud_client):
+async def test_energy_sensors_get_all(mock_cloud_client) -> None:
     energy_sensors = OpenMoticsEnergySensors(mock_cloud_client)
     sensors = await energy_sensors.get_all()
     assert sensors == []

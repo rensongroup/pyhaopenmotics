@@ -43,10 +43,7 @@ load_dotenv()
 
 client_id = os.environ["CLIENT_ID"]
 client_secret = os.environ["CLIENT_SECRET"]
-if "INSTALLATION_ID" in os.environ:
-    installation_id = os.environ["INSTALLATION_ID"]
-else:
-    installation_id = None
+installation_id = os.environ.get("INSTALLATION_ID", None)
 
 
 async def main() -> None:
@@ -71,10 +68,7 @@ async def main() -> None:
 
         installations = await omclient.installations.get_all()
 
-        if installation_id:
-            i_id = int(installation_id)
-        else:
-            i_id = installations[0].idx
+        i_id = int(installation_id) if installation_id else installations[0].idx
 
         await omclient.installations.get_by_id(i_id)
         omclient.installation_id = i_id

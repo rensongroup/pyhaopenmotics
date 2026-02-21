@@ -3,11 +3,13 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, field
+from typing import TYPE_CHECKING
 
 from mashumaro import field_options
 from mashumaro.mixins.orjson import DataClassORJSONMixin
 
-from .location import Location
+if TYPE_CHECKING:
+    from .location import Location
 
 zombie_status = {"humidity": None, "temperature": None, "brightness": None, "power": None}
 

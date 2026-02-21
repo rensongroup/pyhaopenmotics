@@ -38,8 +38,7 @@ class OMInput(OpenMoticsBase, DataClassORJSONMixin):
 
     @classmethod
     def __pre_deserialize__(cls, d: dict[Any, Any]) -> dict[Any, Any]:
-        d = super().__pre_deserialize__(d)
-        return d
+        return super().__pre_deserialize__(d)
 
     def __str__(self) -> str:
         """Represent the class objects as a string.

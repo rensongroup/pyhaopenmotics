@@ -77,67 +77,52 @@ version.path = "src/pyhaopenmotics/__version__.py"
 
 [tool.ruff]
 target-version = "py314"
-line-length = 125  # Allow lines to be as long as 120.
-fix = true
-format.preview = true
-lint.select = [
-  # flake8-builtins
-  "A",
-  # flake8-bugbear
-  "B",
-  # flake8-comprehensions
-  "C4",
-  # mccabe
-  "C90",
-  # pycodestyle
-  "E",
-  # pyflakes
-  "F",
-  # isort
-  "I",
-  # pygrep-hooks
-  "PGH",
-  # ruff
-  "RUF",
-  # flake8-bandit
-  "S",
-  # flake8-simplify
-  "SIM",
-  # flake8-debugger
-  "T10",
-  # tryceratops
-  "TRY",
-  # pyupgrade
-  "UP",
-  "W",
-  # flake8-2020
-  "YTT",
-]
+line-length = 130
+src = [ "src" ]
+format.indent-style = "space"
+format.quote-style = "double"
+format.docstring-code-format = true
+lint.select = [ "ALL" ]
 lint.ignore = [
-  # LineTooLong
-  "E501",
-  # DoNotAssignLambda
-  "E731",
+  "ANN401", # Dynamically typed expressions (typing.Any) are disallowed !TO BE FIXED!
+  "COM812", # trailing comma (formatter conflict)
+  "D",      # pydocstyle
+  "ERA001", # Found commented-out code
+  "ISC001", # string concat (formatter conflict)
+  "TID252", # Prefer absolute imports over relative imports from parent modules !TO BE FIXED!
 ]
 lint.per-file-ignores."src/pyhaopenmotics/client/baseclient.py" = [ "C901" ]
+lint.per-file-ignores."src/pyhaopenmotics/client/websocket.py" = [
+  "FBT001",
+  "FBT002",
+]
+lint.per-file-ignores."src/pyhaopenmotics/openmoticsgw/models/energy.py" = [
+  "PLR2004",
+]
 lint.per-file-ignores."tests/*" = [ "S101" ]
-
-# Flag errors (`C901`) whenever the complexity level exceeds 5.
-# lint.mccabe.max-complexity = 11
+lint.pylint.max-args = 10
 
 [tool.codespell]
 write-changes = true
 
 [tool.pytest]
-ini_options.testpaths = [ "tests" ]
-ini_options.python_files = [ "test_*.py" ]
-ini_options.addopts = "-v --cov=pyhaopenmotics --cov-report=term-missing"
-ini_options.asyncio_mode = "auto"
+testpaths = [ "tests" ]
+pythonpath = [ "src" ]
+addopts = [
+  "--cov=myproject",
+  "--cov-report=term-missing",
+  "--cov-fail-under=80",
+]
 
 [tool.coverage]
 run.branch = true
 run.source = [ "src/pyhaopenmotics" ]
-report.skip_empty = true
+# report.skip_empty = true
+report.exclude_lines = [
+  "if __name__ == .__main__.:",
+  "if TYPE_CHECKING:",
+  "pragma: no cover",
+]
 
 [tool.pyrefly]
 project-includes = [ "src" ]

@@ -56,7 +56,6 @@ async def main() -> None:
         port=port,
         ssl_context=ssl_context,
     ) as omclient:
-        print("get_version")
         await omclient.exec_action("get_version")
 
         outputs = await omclient.outputs.get_all()

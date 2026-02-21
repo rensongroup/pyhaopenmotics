@@ -83,7 +83,8 @@ class BaseClient:
     def _get_api_module(self, module_class: type[T] | None, name: str) -> T:
         """Get an instance of an API module."""
         if module_class is None:
-            raise NotImplementedError(f"{name} class not defined")
+            msg = f"{name} class not defined"
+            raise NotImplementedError(msg)
         return module_class(self)  # type: ignore[call-arg]
 
     @property
@@ -204,9 +205,7 @@ class BaseClient:
         except aiohttp.ClientResponseError as exception:
             if exception.status in [401, 403]:
                 raise AuthenticationError from exception
-            msg = (
-                f"Error occurred while communicating with OpenMotics API: {exception.status}, message='{exception.message}'"
-            )
+            msg = f"Error occurred while communicating with OpenMotics API: {exception.status}, message='{exception.message}'"
             raise OpenMoticsConnectionError(msg) from exception
         except (socket.gaierror, aiohttp.ClientError) as exception:
             msg = "Error occurred while communicating with OpenMotics API."

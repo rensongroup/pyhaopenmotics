@@ -7,7 +7,7 @@ from typing import TYPE_CHECKING, Any
 from .models.energy import EnergySensor
 
 if TYPE_CHECKING:
-    from ..client.localgateway import LocalGateway  # pylint: disable=R0401
+    from ..client.localgateway import LocalGateway
 
 
 class OpenMoticsEnergySensors:

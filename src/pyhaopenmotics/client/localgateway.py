@@ -6,7 +6,6 @@ import logging
 import time
 from typing import TYPE_CHECKING, Any
 
-import aiohttp
 from yarl import URL
 
 from pyhaopenmotics.client.baseclient import BaseClient
@@ -22,6 +21,8 @@ from pyhaopenmotics.openmoticsgw.thermostats import OpenMoticsThermostats
 
 if TYPE_CHECKING:
     import ssl
+
+    import aiohttp
 
 
 _LOGGER = logging.getLogger(__name__)

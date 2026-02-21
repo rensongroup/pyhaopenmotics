@@ -3,13 +3,15 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 from mashumaro import field_options
 from mashumaro.mixins.orjson import DataClassORJSONMixin
 
 from .base import OpenMoticsBase
-from .location import Location
+
+if TYPE_CHECKING:
+    from .location import Location
 
 
 @dataclass

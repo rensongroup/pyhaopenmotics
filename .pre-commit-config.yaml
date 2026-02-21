@@ -71,7 +71,7 @@ repos:
         exclude: ^examples|^tests
 
   - repo: https://github.com/python-jsonschema/check-jsonschema
-    rev: 0.36.1
+    rev: 0.36.2
     hooks:
       - id: check-github-workflows
 
@@ -154,3 +154,19 @@ repos:
         name: Pyrefly (type checking)
         pass_filenames: false # Recommended to do full repo checks. However, you can change this to `true` to only check changed files
         language: system # Use system-installed pyrefly
+
+  # === Security Hooks ===
+  # See references/security-setup.md for detailed guidance on each hook.
+
+  # GitHub Actions linting - catches syntax errors, invalid refs
+  - repo: https://github.com/rhysd/actionlint
+    rev: v1.7.11 # https://github.com/rhysd/actionlint/releases
+    hooks:
+      - id: actionlint
+
+  # # GitHub Actions security audit - excessive permissions, injection risks
+  # - repo: https://github.com/zizmorcore/zizmor-pre-commit
+  #   rev: v1.22.0 # https://github.com/zizmorcore/zizmor-pre-commit/releases
+  #   hooks:
+  #     - id: zizmor
+  #       args: [--persona=regular, --min-severity=medium, --min-confidence=medium]
