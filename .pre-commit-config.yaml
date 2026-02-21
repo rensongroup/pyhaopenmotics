@@ -9,7 +9,7 @@ ci:
 repos:
   # pyproject.toml
   - repo: https://github.com/henryiii/validate-pyproject-schema-store
-    rev: 2026.02.20
+    rev: 2026.02.21
     hooks:
       - id: validate-pyproject
 

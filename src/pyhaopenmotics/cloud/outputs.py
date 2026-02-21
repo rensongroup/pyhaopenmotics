@@ -52,13 +52,6 @@ class OpenMoticsOutputs:
         # https://api.openmotics.com/api/v1.1/base/installations/1/outputs?filter={%22usage%22:%22CONTROL%22}
         query_params = {"filter": output_filter} if output_filter else {"filter": default_filter}
 
-        # if output_filter:
-        #     query_params = {"filter": output_filter}
-        # else:
-        #     # Renson cloud uses by default usage=CONTROL filer
-        #     # https://api.openmotics.com/api/v1.1/base/installations/1/outputs?filter={%22usage%22:%22CONTROL%22}
-        #     query_params = {"filter": {"usage": "CONTROL"}}
-
         body = await self._omcloud.get(
             path=path,
             params=query_params,

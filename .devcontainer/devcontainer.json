@@ -22,10 +22,8 @@
     }
   },
   "features": {
+    "ghcr.io/devcontainers/features/common-utils:2": {},
     "ghcr.io/devcontainers/features/github-cli:1": {},
-    "ghcr.io/devcontainers/features/common-utils:2": {
-      "configureZshAsDefaultShell": false
-    },
     // "ghcr.io/rocker-org/devcontainer-features/apt-packages:1": {
     //   "packages": "git,jq,just"
     // },
