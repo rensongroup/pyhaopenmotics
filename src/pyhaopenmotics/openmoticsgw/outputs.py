@@ -125,7 +125,7 @@ class OpenMoticsOutputs:
             if output.status.on is True:
                 return await self.turn_off(output_id)
             return await self.turn_on(output_id)
-        except AttributeError, KeyError:
+        except (AttributeError, KeyError):
             return None
 
     async def turn_on(
