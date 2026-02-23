@@ -18,6 +18,6 @@ jobs:
       - name: Setup uv
         uses: astral-sh/setup-uv@v6
       - name: Install locked dependencies
-        run: uv sync --all-files --dev
+        run: uv sync --all-extras --dev
       - name: Run mypy
         run: uvx prek --all-files
