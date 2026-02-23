@@ -2,12 +2,8 @@
 
 from __future__ import annotations
 
-import asyncio
-import json
 import logging
 from typing import TYPE_CHECKING, Union
-
-import websockets
 
 if TYPE_CHECKING:
     import ssl
@@ -44,63 +40,63 @@ class WebsocketClient:
         else:
             self.ssl_context = get_ssl_context(verify_ssl=self.verify_ssl)
 
-    # https://websockets.readthedocs.io/en/stable/reference/client.html#opening-a-connection
-    async def connect(  # type: ignore[no-untyped-def]
-        self,
-        # processor:
-        #     # Callable[[List[WebSocketMessage]], Awaitable],
-        #     Callable[[Union[str, bytes]], Awaitable],
-        close_timeout: int = 1,
-        **kwargs,
-    ) -> None:
-        """Connect to websocket server and run `processor(msg)` on every new `msg`.
+    # # https://websockets.readthedocs.io/en/stable/reference/client.html#opening-a-connection
+    # async def connect(  # type: ignore[no-untyped-def]
+    #     self,
+    #     # processor:
+    #     #     # Callable[[List[WebSocketMessage]], Awaitable],
+    #     #     Callable[[Union[str, bytes]], Awaitable],
+    #     close_timeout: int = 1,
+    #     **kwargs,
+    # ) -> None:
+    #     """Connect to websocket server and run `processor(msg)` on every new `msg`.
 
-        :param processor: The callback to process messages.
-        :param close_timeout: How long to wait for handshake when calling .close.
-        :raises AuthError: If invalid API key is supplied.
-        """
-        self.connection_url = await self.baseclient._get_ws_connection_url()
+    #     :param processor: The callback to process messages.
+    #     :param close_timeout: How long to wait for handshake when calling .close.
+    #     :raises AuthError: If invalid API key is supplied.
+    #     """
+    #     self.connection_url = await self.baseclient._get_ws_connection_url()
 
-        _LOGGER.debug("connect: %s", self.connection_url)
-        # darwin needs some extra <3
-        # ssl_context = None
-        # if self.connection_url.startswith("wss://"):
-        #     ssl_context = ssl.SSLContext(ssl.PROTOCOL_TLS_CLIENT)
-        #     if self.tls:
+    #     _LOGGER.debug("connect: %s", self.connection_url)
+    #     # darwin needs some extra <3
+    #     # ssl_context = None
+    #     # if self.connection_url.startswith("wss://"):
+    #     #     ssl_context = ssl.SSLContext(ssl.PROTOCOL_TLS_CLIENT)
+    #     #     if self.tls:
 
-        #     ssl_context.load_verify_locations(certifi.where())
+    #     #     ssl_context.load_verify_locations(certifi.where())
 
-        extra_headers = await self.baseclient._get_ws_headers()
+    #     extra_headers = await self.baseclient._get_ws_headers()
 
-        try:
-            async with websockets.connect(
-                uri=self.connection_url,
-                extra_headers=extra_headers,
-                ssl=self.ssl_context,
-                # ping_interval=10,
-                # ping_timeout=10,
-            ) as websocket:
-                _LOGGER.info("WebSocket Opened.")
+    #     try:
+    #         async with websockets.connect(
+    #             uri=self.connection_url,
+    #             extra_headers=extra_headers,
+    #             ssl=self.ssl_context,
+    #             # ping_interval=10,
+    #             # ping_timeout=10,
+    #         ) as websocket:
+    #             _LOGGER.info("WebSocket Opened.")
 
-                await asyncio.sleep(1)
+    #             await asyncio.sleep(1)
 
-                # _LOGGER.info(json.loads(await websocket.recv()))
-                # _LOGGER.info("websocket client connected. looping...")
+    #             # _LOGGER.info(json.loads(await websocket.recv()))
+    #             # _LOGGER.info("websocket client connected. looping...")
 
-                while self.loop:  # type: ignore[attr-defined]
-                    data = json.loads(await websocket.recv())
-                    if "event" not in data:
-                        continue
+    #             while self.loop:  # type: ignore[attr-defined]
+    #                 data = json.loads(await websocket.recv())
+    #                 if "event" not in data:
+    #                     continue
 
-        #                 try:
-        #                     self.ws_handler(self, data)
-        #                 except:
-        #                     _LOGGER.error("".join(traceback.format_exc()))
+    #     #                 try:
+    #     #                     self.ws_handler(self, data)
+    #     #                 except:
+    #     #                     _LOGGER.error("".join(traceback.format_exc()))
 
-        except websockets.WebSocketException:
-            pass
+    #     except websockets.WebSocketException:
+    #         pass
 
-        return None
+    #     return None
 
     # async def disconnect(self) -> None:
     #     """Close the websocket."""

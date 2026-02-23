@@ -1,183 +1,147 @@
+[build-system]
+build-backend = "hatchling.build"
+requires = [ "hatchling" ]
+
 [project]
 name = "pyhaopenmotics"
-dynamic = ["version"]
 description = "Asynchronous Python client for the OpenMotics API."
-authors = [{ name = "Wouter Coppens", email = "wouter.coppens@gmail.com" }]
-maintainers = [{ name = "Wouter Coppens", email = "wouter.coppens@gmail.com" }]
-license = { text = "AGPLv3" }
 readme = "README.md"
-keywords = ["openmotics", "api", "async", "client", "homeassistant"]
+keywords = [ "api", "async", "client", "homeassistant", "openmotics" ]
+license = { text = "AGPLv3" }
+maintainers = [ { name = "Wouter Coppens", email = "wouter.coppens@gmail.com" } ]
+authors = [ { name = "Wouter Coppens", email = "wouter.coppens@gmail.com" } ]
+requires-python = ">=3.13"
 classifiers = [
   "Development Status :: 4 - Beta",
   "Framework :: AsyncIO",
   "Intended Audience :: Developers",
   "Natural Language :: English",
+  "Programming Language :: Python :: 3 :: Only",
   "Programming Language :: Python :: 3.13",
-  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.14",
   "Topic :: Software Development :: Libraries :: Python Modules",
 ]
-
-requires-python = ">=3.13"
+dynamic = [ "version" ]
 dependencies = [
-  "aiohttp>=3.11.0",
-  # "async_timeout>=4.0.0",
-  "backoff>=2.2.1",
-  "yarl>=1.18.0",
-  "mashumaro>=3.11",
+  "aiohttp>=3.11",
+  "mashumaro>=3",
   "orjson>=3.10",
-  "websockets>=15.0",
-  "yarl>=1.18.0",
+  "stamina>=25",
+  "websockets>=15",
+  "yarl>=1.18",
 ]
-
-[project.optional-dependencies]
-cli = ["authlib", "httpx", "python-dotenv"]
-
-# packages = [
-#     { include = "pyhaopenmotics", from = "src" },
+# optional-dependencies.build = ["hatch"]
+# optional-dependencies.dev = [
+# "authlib",
+# "deptry",
+# "hatch",
+# "httpx",
+# "prek",
+# "pyright",
+# "pytest",
+# "pytest-asyncio",
+# "pytest-cov",
+# "pytest-mock",
+# "python-dotenv",
+# "ruff",
+# "ty",
+# "tox-uv",
 # ]
+urls.changelog = "https://github.com/rensongroup/pyhaopenmotics/releases"
+urls.issues = "https://github.com/rensongroup/pyhaopenmotics/issues"
+urls.repository = "https://github.com/rensongroup/pyhaopenmotics"
 
-[project.urls]
-Changelog = "https://github.com/rensongroup/pyhaopenmotics/releases"
-Repository = "https://github.com/rensongroup/pyhaopenmotics"
-Issues = "https://github.com/rensongroup/pyhaopenmotics/issues"
-
-[tool.bandit]
-exclude_dirs = ["tests"]
-
-[tool.codespell]
-write-changes = true
-
-[tool.coverage.run]
-plugins = ["covdefaults"]
-source = ["pyhaopenmotics"]
-
-[tool.coverage.report]
-fail_under = 25
-show_missing = true
-
-[tool.mypy]
-python_version = "3.13"
-color_output = true
-error_summary = true
-
-disable_error_code = ['arg-type', 'return-value', 'misc', 'no-any-return']
-
-[tool.pylint]
-max-line-length = 120
-
-messages_control.disable = [
-  # Reasons disabled:
-  # format - handled by ruff
-  "format",
-  # line-too-long - handled by ruff
-  "line-too-long",
-  # duplicate-code - unavoidable
-  "duplicate-code",
-  # used-before-assignment - false positives with TYPE_CHECKING structures
-  "used-before-assignment",
-
-  "abstract-method",
-  "import-error",
-  "too-many-positional-arguments",
-  "fixme",
-  "too-many-instance-attributes",
-  "too-many-arguments",
-  "unreachable",                   #only in src/pyhaopenmotics/openmoticsgw/thermostats.py
+[dependency-groups]
+dev = [
+  { include-group = "lint" },
+  { include-group = "test" },
+  { include-group = "tools" },
 ]
-ignore-paths = [
-  "examples",
-  "tests",
-  "src/pyhaopenmotics/client/websocket.py", # To be fixed one day
-]
-
-
-[tool.pytest.ini_options]
-addopts = "--cov"
-asyncio_mode = "auto"
-
-[tool.ruff]
-# Allow lines to be as long as 120.
-line-length = 125
-
-[tool.ruff.lint]
-ignore = [
-  "ANN401",  # Opinioated warning on disallowing dynamically typed expressions
-  "D203",    # Conflicts with other rules
-  "D213",    # Conflicts with other rules
-  "D417",    # False positives in some occasions
-  "PLR2004", # Just annoying, not really useful
-
-  # Conflicts with the Ruff formatter
-  "COM812",
-  "ISC001",
-
-  # To fix some day
-  "ERA001", # Found commented-out code
-  "FIX001",
-  "FIX002",
-  "TD003",
-  "ARG002",
-]
-select = ["ALL"]
-
-[tool.ruff.lint.pylint]
-max-args = 10
-
-[tool.ruff.lint.flake8-pytest-style]
-fixture-parentheses = false
-mark-parentheses = false
-
-[tool.ruff.lint.isort]
-known-first-party = ["pyhaopenmotics"]
-
-[tool.ruff.lint.flake8-type-checking]
-runtime-evaluated-base-classes = [
-  "mashumaro.mixins.orjson.DataClassORJSONMixin",
-]
-
-[tool.ruff.lint.mccabe]
-max-complexity = 25
-
-[tool.ruff.lint.per-file-ignores]
-"examples/*.py" = ["ALL"]
-"src/pyhaopenmotics/client/websocket.py" = ["ALL"]
-"src/pyhaopenmotics/client/openmoticscloud.py" = ["ERA001"] # Websockets code
-"src/pyhaopenmotics/client/localgateway.py" = ["ERA001"]    # Websockets code
-# "src/pyhaopenmotics/cloud/models/*.py" = ["TCH002", "TCH003"]
-
-
-[tool.pyright]
-venvPath = "."
-venv = ".venv"
-exclude = ["examples", "tests"]
-
-reportArgumentType = false
-reportCallIssue = false
-
-
-[tool.uv]
-prerelease = "allow"
-dev-dependencies = [
-  "aresponses",
-  "aioresponses",
-  "codespell",
-  "covdefaults",
-  "coverage[toml]",
-  "mypy",
-  "pre-commit",
-  "pre-commit-hooks",
-  "pylint",
+test = [
+  "authlib",
+  "coverage",
+  "httpx",
+  "ipdb",
   "pytest",
   "pytest-asyncio",
   "pytest-cov",
   "pytest-mock",
-  "ruff",
-  "yamllint",
+  "python-dotenv",
+  "ty",
+]
+docs = [ "mkdocs" ]
+lint = [ "pyrefly", "ruff" ]
+tools = [ "ruff", "rust-just" ]
+
+[tool.hatch]
+version.path = "src/pyhaopenmotics/__version__.py"
+
+[tool.ruff]
+target-version = "py313"
+line-length = 130
+src = [ "src" ]
+format.indent-style = "space"
+format.quote-style = "double"
+format.docstring-code-format = true
+lint.select = [ "ALL" ]
+lint.ignore = [
+  "ANN401", # Dynamically typed expressions (typing.Any) are disallowed !TO BE FIXED!
+  "COM812", # trailing comma (formatter conflict)
+  "D",      # pydocstyle
+  "ERA001", # Found commented-out code
+  "ISC001", # string concat (formatter conflict)
+  "TID252", # Prefer absolute imports over relative imports from parent modules !TO BE FIXED!
+]
+lint.per-file-ignores."src/pyhaopenmotics/client/baseclient.py" = [ "C901" ]
+lint.per-file-ignores."src/pyhaopenmotics/client/websocket.py" = [
+  "FBT001",
+  "FBT002",
+]
+lint.per-file-ignores."src/pyhaopenmotics/openmoticsgw/models/energy.py" = [
+  "PLR2004",
+]
+lint.per-file-ignores."tests/*" = [ "S101" ]
+lint.pylint.max-args = 10
+
+[tool.codespell]
+write-changes = true
+
+[tool.pytest]
+testpaths = [ "tests" ]
+pythonpath = [ "src" ]
+addopts = [
+  "--cov=myproject",
+  "--cov-report=term-missing",
+  "--cov-fail-under=80",
 ]
 
-[build-system]
-requires = ["hatchling"]
-build-backend = "hatchling.build"
+[tool.coverage]
+run.branch = true
+run.source = [ "src/pyhaopenmotics" ]
+# report.skip_empty = true
+report.exclude_lines = [
+  "if __name__ == .__main__.:",
+  "if TYPE_CHECKING:",
+  "pragma: no cover",
+]
 
-[tool.hatch.version]
-path = "src/pyhaopenmotics/__version__.py"
+[tool.pyrefly]
+project-includes = [ "src" ]
+project-excludes = [ "examples", "tests" ]
+infer-with-first-use = false
+errors.bad-argument-type = "ignore"
+errors.bad-override = "ignore"
+
+[tool.pyright]
+venvPath = "."
+venv = ".venv"
+include = [ "src" ]
+exclude = [ "examples", "tests" ]
+reportArgumentType = false
+reportCallIssue = false
+reportIncompatibleMethodOverride = false
+
+[tool.bandit]
+exclude_dirs = [ "tests" ]
+# tests = ["B201", "B301"]
+skips = [ "B101", "B601" ]

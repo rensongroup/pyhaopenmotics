@@ -8,7 +8,7 @@ from typing import Any
 from mashumaro import field_options
 from mashumaro.mixins.orjson import DataClassORJSONMixin
 
-from .location import Location
+from .location import Location  # noqa: TC001
 
 
 @dataclass

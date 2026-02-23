@@ -2,100 +2,40 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import Any
 
-from .location import Location
+from mashumaro.mixins.orjson import DataClassORJSONMixin
+
+from .base import OpenMoticsBase
+from .location import Location  # noqa: TC001
 
 
 @dataclass
-class Status:
+class Status(DataClassORJSONMixin):
     """Class holding the status."""
 
-    humidity: float
-    temperature: float
-    brightness: int
-
-    @staticmethod
-    def from_dict(data: dict[str, Any]) -> Status:
-        """Return Status object from OpenMotics API response.
-
-        Args:
-        ----
-            data: The data from the OpenMotics API.
-
-        Returns:
-        -------
-            A Status object.
-
-        """
-        return Status(
-            # on = True if status = 1
-            humidity=data.get("humidity", 0),
-            temperature=data.get("temperature", 0),
-            brightness=data.get("brightness", 0),
-        )
+    humidity: float = field(default=0.0)
+    temperature: float = field(default=0.0)
+    brightness: int = field(default=0)
 
 
 @dataclass
-class Sensor:
-    """Class holding an OpenMotics Sensor.
-
-    # noqa: E800
-    #     {
-    #     "_version": <version>,
-    #     "id": <id>,
-    #     "name": "<name>",
-    #     "location": {
-    #         "room_id": null | <room_id>,
-    #         "installation_id": <installation id>
-    #     },
-    #     "status": {
-    #         "humidity": null | <hunidity 0 - 100>,
-    #         "temperature": null | <temperature -32 - 95>,
-    #         "brightness": null | <brightness 0 - 100>
-    #     }
-    # }
-     #     ...
-    """
+class Sensor(OpenMoticsBase, DataClassORJSONMixin):
+    """Class holding an OpenMotics Sensor."""
 
     # pylint: disable=too-many-instance-attributes
-    idx: int
-    local_id: int
-    name: str
-    location: Location
-    physical_quantity: str
-    status: Status
-    last_state_change: float
-    version: str
+    location: Location | None = field(default=None)
+    physical_quantity: str = field(default="None")
+    status: Status | None = field(default=None)
+    last_state_change: float = field(default=0.0)
+    version: str = field(default="0.0")
 
-    @staticmethod
-    def from_dict(data: dict[str, Any]) -> Sensor | None:
-        """Return Output object from OpenMotics API response.
-
-        Args:
-        ----
-            data: The data from the OpenMotics API.
-
-        Returns:
-        -------
-            A Output object.
-
-        """
-        status = Status.from_dict({})
-        if "status" in data:
-            status = Status.from_dict(data.get("status", {}))
-
-        return Sensor(
-            idx=data.get("id", 0),
-            local_id=data.get("id", 0),
-            name=data.get("name", "None"),
-            location=Location.from_dict(data),
-            physical_quantity=data.get("physical_quantity", "None"),
-            status=status,
-            last_state_change=data.get("last_state_change"),
-            version=data.get("version", "0.0"),
-        )
+    @classmethod
+    def __pre_deserialize__(cls, d: dict[Any, Any]) -> dict[Any, Any]:
+        d = super().__pre_deserialize__(d)
+        d["location"] = d.copy()
+        return d
 
     def __str__(self) -> str:
         """Represent the class objects as a string.

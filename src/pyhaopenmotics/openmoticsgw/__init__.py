@@ -1,12 +1,12 @@
 """Directory holding openmoticsgw."""
 
-from pyhaopenmotics.openmoticsgw.groupactions import OpenMoticsGroupActions
-from pyhaopenmotics.openmoticsgw.inputs import OpenMoticsInputs
-from pyhaopenmotics.openmoticsgw.lights import OpenMoticsLights
-from pyhaopenmotics.openmoticsgw.outputs import OpenMoticsOutputs
-from pyhaopenmotics.openmoticsgw.sensors import OpenMoticsSensors
-from pyhaopenmotics.openmoticsgw.shutters import OpenMoticsShutters
-from pyhaopenmotics.openmoticsgw.thermostats import OpenMoticsThermostats
+from .groupactions import OpenMoticsGroupActions
+from .inputs import OpenMoticsInputs
+from .lights import OpenMoticsLights
+from .outputs import OpenMoticsOutputs
+from .sensors import OpenMoticsSensors
+from .shutters import OpenMoticsShutters
+from .thermostats import OpenMoticsThermostats
 
 __all__ = [
     "OpenMoticsGroupActions",

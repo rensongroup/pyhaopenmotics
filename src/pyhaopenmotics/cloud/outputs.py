@@ -5,10 +5,10 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import TYPE_CHECKING, Any
 
-from pyhaopenmotics.cloud.models.output import Output
+from .models.output import Output
 
 if TYPE_CHECKING:
-    from pyhaopenmotics.client.openmoticscloud import (
+    from ..client.openmoticscloud import (
         OpenMoticsCloud,  # pylint: disable=R0401
     )
 
@@ -51,13 +51,6 @@ class OpenMoticsOutputs:
         # Renson cloud uses by default usage=CONTROL filter
         # https://api.openmotics.com/api/v1.1/base/installations/1/outputs?filter={%22usage%22:%22CONTROL%22}
         query_params = {"filter": output_filter} if output_filter else {"filter": default_filter}
-
-        # if output_filter:
-        #     query_params = {"filter": output_filter}
-        # else:
-        #     # Renson cloud uses by default usage=CONTROL filer
-        #     # https://api.openmotics.com/api/v1.1/base/installations/1/outputs?filter={%22usage%22:%22CONTROL%22}
-        #     query_params = {"filter": {"usage": "CONTROL"}}
 
         body = await self._omcloud.get(
             path=path,

@@ -5,12 +5,11 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import TYPE_CHECKING, Any
 
-from pyhaopenmotics.helpers import merge_dicts
-
+from ..helpers import merge_dicts
 from .models.input import OMInput
 
 if TYPE_CHECKING:
-    from pyhaopenmotics.localgateway import LocalGateway  # pylint: disable=R0401
+    from ..client.localgateway import LocalGateway  # pylint: disable=R0401
 
 
 @dataclass

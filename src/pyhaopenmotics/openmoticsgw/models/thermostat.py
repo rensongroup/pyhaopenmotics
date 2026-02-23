@@ -2,333 +2,145 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import Any
 
+from mashumaro import field_options
+from mashumaro.mixins.orjson import DataClassORJSONMixin
+
+from .base import OpenMoticsBase
+
 
 @dataclass
-class GroupLocation:
+class GroupLocation(DataClassORJSONMixin):
     """Class holding the location."""
 
-    thermostat_group_id: int
-    installation_id: int
-    room_id: int
-
-    @staticmethod
-    def from_dict(data: dict[str, Any]) -> GroupLocation:
-        """Return Status object from OpenMotics API response.
-
-        Args:
-        ----
-            data: The data from the OpenMotics API.
-
-        Returns:
-        -------
-            A GroupLocation object.
-
-        """
-        return GroupLocation(
-            thermostat_group_id=data.get("thermostat_group_id", 0),
-            installation_id=data.get("installation_id", 0),
-            room_id=data.get("room_id", 0),
-        )
+    thermostat_group_id: int = field(default=0)
+    installation_id: int = field(default=0)
+    room_id: int = field(default=0)
 
 
 @dataclass
-class UnitLocation:
+class UnitLocation(DataClassORJSONMixin):
     """Class holding the location."""
 
-    thermostat_group_id: int
-    installation_id: int
-    room_id: int
-
-    @staticmethod
-    def from_dict(data: dict[str, Any]) -> UnitLocation:
-        """Return Status object from OpenMotics API response.
-
-        Args:
-        ----
-            data: The data from the OpenMotics API.
-
-        Returns:
-        -------
-            A UnitLocation object.
-
-        """
-        return UnitLocation(
-            thermostat_group_id=data.get("thermostat_group_id", 0),
-            installation_id=data.get("installation_id", 0),
-            room_id=data.get("room_id", 0),
-        )
+    thermostat_group_id: int = field(default=0)
+    installation_id: int = field(default=0)
+    room_id: int = field(default=0)
 
 
 @dataclass
-class GroupStatus:
+class GroupStatus(DataClassORJSONMixin):
     """Class holding the status."""
 
-    mode: str
-    state: bool
-
-    @staticmethod
-    def from_dict(data: dict[str, Any]) -> GroupStatus:
-        """Return GroupStatus object from OpenMotics API response.
-
-        Args:
-        ----
-            data: The data from the OpenMotics API.
-
-        Returns:
-        -------
-            A GroupStatus object.
-
-        """
-        return GroupStatus(
-            mode=data.get("mode", "None"),
-            state=data.get("state", False),
-        )
+    mode: str = field(default="None")
+    state: bool = field(default=False)
 
 
 @dataclass
-class UnitStatus:
+class UnitStatus(DataClassORJSONMixin):
     """Class holding the status."""
 
-    actual_temperature: float
-    current_setpoint: float
-    output_0: str
-    output_1: str
-    preset: str
-
-    @staticmethod
-    def from_dict(data: dict[str, Any]) -> UnitStatus:
-        """Return UnitStatus object from OpenMotics API response.
-
-        Args:
-        ----
-            data: The data from the OpenMotics API.
-
-        Returns:
-        -------
-            A UnitStatus object.
-
-        """
-        return UnitStatus(
-            actual_temperature=data.get("actual_temperature", 0),
-            current_setpoint=data.get("setpoint_temperature", 0),
-            output_0=data.get("output_0", "None"),
-            output_1=data.get("output_1", "None"),
-            preset=data.get("preset", "None"),
-        )
+    actual_temperature: float = field(default=0.0)
+    current_setpoint: float = field(metadata=field_options(alias="setpoint_temperature"), default=0.0)
+    output_0: str = field(default="None")
+    output_1: str = field(default="None")
+    preset: str = field(default="None")
 
 
 @dataclass
-class Presets:
+class Presets(DataClassORJSONMixin):
     """Class holding the status."""
 
-    away: str
-    party: str
-    vacation: str
-
-    @staticmethod
-    def from_dict(data: dict[str, Any]) -> Presets:
-        """Return Presets object from OpenMotics API response.
-
-        Args:
-        ----
-            data: The data from the OpenMotics API.
-
-        Returns:
-        -------
-            A Presets object.
-
-        """
-        return Presets(
-            away=data.get("away", "None"),
-            party=data.get("party", "None"),
-            vacation=data.get("vacation", "None"),
-        )
+    away: str = field(default="None")
+    party: str = field(default="None")
+    vacation: str = field(default="None")
 
 
 @dataclass
-class Schedule:
+class Schedule(DataClassORJSONMixin):
     """Class holding the Schedule."""
 
-    data: dict[str, Any]
-    start: str
+    data: dict[str, Any] = field(default_factory=dict)
+    start: str = field(default="None")
 
-    @staticmethod
-    def from_dict(data: dict[str, Any]) -> Schedule:
-        """Return Schedule object from OpenMotics API response.
-
-        Args:
-        ----
-            data: The data from the OpenMotics API.
-
-        Returns:
-        -------
-            A Schedule object.
-
-        """
-        return Schedule(
-            data=data.get("data", "None"),
-            start=data.get("start", "None"),
-        )
+    @classmethod
+    def __pre_deserialize__(cls, d: dict[Any, Any]) -> dict[Any, Any]:
+        if "data" not in d:
+            d["data"] = {}
+        return d
 
 
 @dataclass
-class ConfigurationPreset:
+class ConfigurationPreset(DataClassORJSONMixin):
     """Class holding the ConfigurationPreset."""
 
-    output_0_id: int
-    output_1_id: int
-    presets: Presets
-    schedule: Schedule
-    sensor_id: int
+    output_0_id: int = field(default=0)
+    output_1_id: int = field(default=0)
+    presets: Presets | None = field(default=None)
+    schedule: Schedule | None = field(default=None)
+    sensor_id: int = field(default=0)
 
-    @staticmethod
-    def from_dict(data: dict[str, Any]) -> ConfigurationPreset:
-        """Return ConfigurationPreset object from OpenMotics API response.
-
-        Args:
-        ----
-            data: The data from the OpenMotics API.
-
-        Returns:
-        -------
-            A ConfigurationPreset object.
-
-        """
-        return ConfigurationPreset(
-            output_0_id=data.get("output_0_id", 0),
-            output_1_id=data.get("output_1_id", 0),
-            presets=Presets.from_dict(data),
-            schedule=Schedule.from_dict(data),
-            sensor_id=data.get("sensor_id", 0),
-        )
+    @classmethod
+    def __pre_deserialize__(cls, d: dict[Any, Any]) -> dict[Any, Any]:
+        d["presets"] = d.copy()
+        d["schedule"] = d.copy()
+        return d
 
 
 @dataclass
-class Allowed:
+class Allowed(DataClassORJSONMixin):
     """Class holding the Configuration."""
 
-    allowed: bool
-
-    @staticmethod
-    def from_dict(data: dict[str, Any]) -> Allowed:
-        """Return Allowed object from OpenMotics API response.
-
-        Args:
-        ----
-            data: The data from the OpenMotics API.
-
-        Returns:
-        -------
-            A Allowed object.
-
-        """
-        return Allowed(
-            allowed=data.get("allowed", False),
-        )
+    allowed: bool = field(default=False)
 
 
 @dataclass
-class Acl:
+class Acl(DataClassORJSONMixin):
     """Class holding the Acl."""
 
-    set_state: Allowed
-    set_mode: Allowed
+    set_state: Allowed | None = field(default=None)
+    set_mode: Allowed | None = field(default=None)
 
-    @staticmethod
-    def from_dict(data: dict[str, Any]) -> Acl:
-        """Return Acl object from OpenMotics API response.
-
-        Args:
-        ----
-            data: The data from the OpenMotics API.
-
-        Returns:
-        -------
-            A Acl object.
-
-        """
-        return Acl(
-            set_state=Allowed.from_dict(data),
-            set_mode=Allowed.from_dict(data),
-        )
+    @classmethod
+    def __pre_deserialize__(cls, d: dict[Any, Any]) -> dict[Any, Any]:
+        d["set_state"] = d.copy()
+        d["set_mode"] = d.copy()
+        return d
 
 
 @dataclass
-class Configuration:
+class Configuration(DataClassORJSONMixin):
     """Class holding the Configuration."""
 
-    heating: ConfigurationPreset
-    cooling: ConfigurationPreset
+    heating: ConfigurationPreset | None = field(default=None)
+    cooling: ConfigurationPreset | None = field(default=None)
 
-    @staticmethod
-    def from_dict(data: dict[str, Any]) -> Configuration:
-        """Return Configuration object from OpenMotics API response.
-
-        Args:
-        ----
-            data: The data from the OpenMotics API.
-
-        Returns:
-        -------
-            A Configuration object.
-
-        """
-        return Configuration(
-            heating=ConfigurationPreset.from_dict(data),
-            cooling=ConfigurationPreset.from_dict(data),
-        )
+    @classmethod
+    def __pre_deserialize__(cls, d: dict[Any, Any]) -> dict[Any, Any]:
+        d["heating"] = d.copy()
+        d["cooling"] = d.copy()
+        return d
 
 
 @dataclass
-class ThermostatGroup:
+class ThermostatGroup(OpenMoticsBase, DataClassORJSONMixin):
     """Class holding an OpenMotics ThermostatGroup."""
 
     # pylint: disable=too-many-instance-attributes
-    idx: int
-    local_id: int
-    name: str
-    schedule: Schedule
-    capabilities: list[Any]
-    version: str
-    thermostat_ids: dict[str, Any]
-    status: GroupStatus
-    acl: Acl
+    schedule: Schedule | None = field(default=None)
+    capabilities: list[Any] = field(default_factory=lambda: ["None"])
+    version: str = field(default="0.0")
+    thermostat_ids: dict[str, Any] = field(default_factory=lambda: {"ids": "None"})
+    status: GroupStatus | None = field(default=None)
+    acl: Acl | None = field(default=None)
 
-    @staticmethod
-    def from_dict(data: dict[str, Any]) -> ThermostatGroup | None:
-        """Return ThermostatGroup object from OpenMotics API response.
-
-        Args:
-        ----
-            data: The data from the OpenMotics API.
-
-        Returns:
-        -------
-            A ThermostatGroup object.
-
-        """
-        status = GroupStatus.from_dict({})
-        if "status" in data:
-            status = GroupStatus.from_dict(data.get("status", {}))
-
-        # placeholders
-        capabilities = ["None"]
-        thermostat_ids = {"ids": "None"}
-
-        return ThermostatGroup(
-            idx=data.get("id", 0),
-            local_id=data.get("id", 0),
-            name=data.get("name", "None"),
-            schedule=Schedule.from_dict(data),
-            capabilities=capabilities,
-            version=data.get("version", "0.0"),
-            thermostat_ids=thermostat_ids,
-            acl=Acl.from_dict(data),
-            status=status,
-        )
+    @classmethod
+    def __pre_deserialize__(cls, d: dict[Any, Any]) -> dict[Any, Any]:
+        d = super().__pre_deserialize__(d)
+        d["schedule"] = d.copy()
+        d["acl"] = d.copy()
+        return d
 
     def __str__(self) -> str:
         """Represent the class objects as a string.
@@ -342,44 +154,21 @@ class ThermostatGroup:
 
 
 @dataclass
-class ThermostatUnit:
+class ThermostatUnit(OpenMoticsBase, DataClassORJSONMixin):
     """Class holding an OpenMotics ThermostatUnit."""
 
     # pylint: disable=too-many-instance-attributes
-    idx: int
-    local_id: int
-    name: str
-    location: UnitLocation
-    status: UnitStatus
-    version: str
-    acl: Acl
+    location: UnitLocation | None = field(default=None)
+    status: UnitStatus | None = field(default=None)
+    version: str = field(default="0.0")
+    acl: Acl | None = field(default=None)
 
-    @staticmethod
-    def from_dict(data: dict[str, Any]) -> ThermostatUnit | None:
-        """Return ThermostatUnit object from OpenMotics API response.
-
-        Args:
-        ----
-            data: The data from the OpenMotics API.
-
-        Returns:
-        -------
-            A ThermostatUnit object.
-
-        """
-        status = UnitStatus.from_dict({})
-        if "status" in data:
-            status = UnitStatus.from_dict(data.get("status", {}))
-
-        return ThermostatUnit(
-            idx=data.get("id", 0),
-            local_id=data.get("id", 0),
-            name=data.get("name", "None"),
-            location=UnitLocation.from_dict(data),
-            version=data.get("version", "0.0"),
-            acl=Acl.from_dict(data),
-            status=status,
-        )
+    @classmethod
+    def __pre_deserialize__(cls, d: dict[Any, Any]) -> dict[Any, Any]:
+        d = super().__pre_deserialize__(d)
+        d["location"] = d.copy()
+        d["acl"] = d.copy()
+        return d
 
     def __str__(self) -> str:
         """Represent the class objects as a string.

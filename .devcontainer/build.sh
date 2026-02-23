@@ -15,18 +15,12 @@ fi
 sudo apt update
 sudo apt-get upgrade -y
 
-. ${NVM_DIR}/nvm.sh
-nvm install
-nvm use
-
-npm install
-
 # Install Python dependencies
 python3 -m  pip install --upgrade pip
 
-uv sync --extra cli
-uv run pre-commit install
+# Install pre-commit hooks
+uv tool install prek
+uv run prek install
 
-# required for some local testing
-# python3 -m pip install python-dotenv
-# python3 -m pip install httpx authlib
+# Install Dependencies
+uv sync --all-extras --group dev

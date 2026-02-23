@@ -8,7 +8,7 @@ from typing import TYPE_CHECKING, Any
 from .models.groupaction import GroupAction
 
 if TYPE_CHECKING:
-    from pyhaopenmotics.localgateway import LocalGateway  # pylint: disable=R0401
+    from ..client.localgateway import LocalGateway  # pylint: disable=R0401
 
 
 @dataclass

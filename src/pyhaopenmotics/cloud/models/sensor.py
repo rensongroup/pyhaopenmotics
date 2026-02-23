@@ -7,7 +7,7 @@ from dataclasses import dataclass, field
 from mashumaro import field_options
 from mashumaro.mixins.orjson import DataClassORJSONMixin
 
-from .location import Location
+from .location import Location  # noqa: TC001
 
 zombie_status = {"humidity": None, "temperature": None, "brightness": None, "power": None}
 

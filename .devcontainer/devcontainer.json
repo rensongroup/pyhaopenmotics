@@ -1,7 +1,7 @@
 {
   "containerEnv": {
-    "EXTERNALLY-MANAGED": "false",
-    "POETRY_VIRTUALENVS_IN_PROJECT": "true"
+    "EXTERNALLY-MANAGED": "false"
+    // "POETRY_VIRTUALENVS_IN_PROJECT": "true"
   },
   "customizations": {
     "codespaces": {
@@ -9,25 +9,34 @@
     },
     "vscode": {
       "extensions": [
-        "ms-python.python",
-        "redhat.vscode-yaml",
-        "esbenp.prettier-vscode",
-        "GitHub.vscode-pull-request-github",
-        "charliermarsh.ruff",
-        "GitHub.vscode-github-actions",
-        "ryanluker.vscode-coverage-gutters",
-        "tamasfe.even-better-toml"
+        "ms-python.python", // Base Python support (interpreter, debugging)
+        "ms-python.debugpy", // Python debugger
+        // "ms-python.vscode-pylance", // IntelliSense, type hints (until ty has IDE plugin)
+        "charliermarsh.ruff", // Ruff: single tool for linting + formatting
+        "meta.pyrefly", // Pyrefly: AI code completion
+        "ms-python.vscode-python-envs", // Python environment management
+        "tamasfe.even-better-toml", // TOML support for pyproject.toml
+        "editorconfig.editorconfig", // EditorConfig support
+        "eamodio.gitlens" // Git supercharged
       ]
     }
   },
   "features": {
+    "ghcr.io/devcontainers/features/common-utils:2": {},
     "ghcr.io/devcontainers/features/github-cli:1": {},
-    "ghcr.io/devcontainers/features/node:1": {},
-    "ghcr.io/va-h/devcontainers-features/uv:1": {}
+    // "ghcr.io/rocker-org/devcontainer-features/apt-packages:1": {
+    //   "packages": "git,jq,just"
+    // },
+    "ghcr.io/va-h/devcontainers-features/uv:1": {
+      "shellAutocompletion": true
+    },
+    "ghcr.io/jsburckhardt/devcontainer-features/ruff:1": {},
+    "ghcr.io/devcontainers/features/go:1": {}
   },
-  "image": "mcr.microsoft.com/vscode/devcontainers/python:3.13",
+  "image": "mcr.microsoft.com/vscode/devcontainers/python:3.14",
   "mounts": [
     "source=${localEnv:HOME}/${localEnv:USERPROFILE}/ha-env,target=/home/vscode/ha-env,type=bind,readonly"
+    // "source=${localEnv:HOME}/.local/share/opencode/auth.json,target=/tmp/opencode-auth.json,type=bind,consistency=cached"
   ],
   "name": "Asynchronous Python client for OpenMotics",
   "updateContentCommand": "bash ./.devcontainer/build.sh"

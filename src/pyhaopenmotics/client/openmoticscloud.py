@@ -6,13 +6,12 @@ import base64
 import logging
 from typing import TYPE_CHECKING, Any
 
-import aiohttp
-
 # import websocket
 # from websockets import connect
 from yarl import URL
 
 from pyhaopenmotics.client.baseclient import BaseClient
+from pyhaopenmotics.cloud.energy import OpenMoticsEnergySensors
 from pyhaopenmotics.cloud.groupactions import OpenMoticsGroupActions
 from pyhaopenmotics.cloud.inputs import OpenMoticsInputs
 from pyhaopenmotics.cloud.installations import OpenMoticsInstallations
@@ -25,7 +24,8 @@ from pyhaopenmotics.const import CLOUD_API_URL
 
 if TYPE_CHECKING:
     from collections.abc import Awaitable, Callable
-    from typing import Self
+
+    import aiohttp
 
     from pyhaopenmotics.cloud.models.installation import Installation
 
@@ -38,6 +38,14 @@ _LOGGER = logging.getLogger(__name__)
 class OpenMoticsCloud(BaseClient):
     """Docstring."""
 
+    _inputs_class = OpenMoticsInputs
+    _outputs_class = OpenMoticsOutputs
+    _groupactions_class = OpenMoticsGroupActions
+    _lights_class = OpenMoticsLights
+    _sensors_class = OpenMoticsSensors
+    _energysensors_class = OpenMoticsEnergySensors
+    _shutters_class = OpenMoticsShutters
+    _thermostats_class = OpenMoticsThermostats
     _installations: list[Installation] | None
 
     def __init__(
@@ -66,6 +74,7 @@ class OpenMoticsCloud(BaseClient):
             token=token,
             request_timeout=request_timeout,
             session=session,
+            token_refresh_method=token_refresh_method,
         )
         self._installation_id = installation_id
         self.base_url = base_url
@@ -123,6 +132,7 @@ class OpenMoticsCloud(BaseClient):
     #                     "THERMOSTAT_CHANGE",
     #                     "THERMOSTAT_GROUP_CHANGE",
     #                     "VENTILATION_CHANGE",
+    #                     "INPUT_TRIGGER",
     #                 ],
     #             },
     #         },
@@ -147,29 +157,8 @@ class OpenMoticsCloud(BaseClient):
             headers
 
         """
-        # if self.token is None or \
-        # self.token_expires_at < time.time() + CLOCK_OUT_OF_SYNC_MAX_SEC:
-
-        if headers is None:
-            headers = {}
-
-        headers.update(
-            {
-                "User-Agent": self.user_agent,
-                "Accept": "application/json",
-                # "Accept-Language": "en-US,en;q=0.5",
-                # "Accept-Encoding": "gzip, defalte, br",
-                # "Referer": "https://portal.openmotics.com/",
-                "Authorization": f"Bearer {self.token}",
-                # "Content-Type": "application/json",
-                # "Origin": "https://portal.openmotics.com",
-                # "Connection": "keep-alive",
-                # "Sec-Fetch-Dest": "empty",
-                # "Sec-Fetch-Mode": "cors",
-                # "Sec-Fetch-Site": "same-site",
-                # "Cache-Control": "no-cache",
-            },
-        )
+        headers = await super()._get_auth_headers(headers)
+        headers["Accept"] = "application/json"
         return headers
 
     async def _get_ws_connection_url(self) -> str:
@@ -436,145 +425,6 @@ class OpenMoticsCloud(BaseClient):
         """
         return OpenMoticsInstallations(self)
 
-    @property
-    def inputs(self) -> OpenMoticsInputs:
-        """Get inputs.
-
-        Returns
-        -------
-            OpenMoticsInputs
-
-        """
-        return OpenMoticsInputs(self)
-
-    @property
-    def outputs(self) -> OpenMoticsOutputs:
-        """Get outputs.
-
-        Returns
-        -------
-            OpenMoticsOutputs
-
-        """
-        return OpenMoticsOutputs(self)
-
-    @property
-    def groupactions(self) -> OpenMoticsGroupActions:
-        """Get groupactions.
-
-        Returns
-        -------
-            OpenMoticsGroupActions
-
-        """
-        return OpenMoticsGroupActions(self)
-
-    @property
-    def lights(self) -> OpenMoticsLights:
-        """Get lights.
-
-        Returns
-        -------
-            OpenMoticsLights
-
-        """
-        return OpenMoticsLights(self)
-
-    @property
-    def sensors(self) -> OpenMoticsSensors:
-        """Get sensors.
-
-        Returns
-        -------
-            OpenMoticsSensors
-
-        """
-        return OpenMoticsSensors(self)
-
-    @property
-    def shutters(self) -> OpenMoticsShutters:
-        """Get shutters.
-
-        Returns
-        -------
-            OpenMoticsShutters
-
-        """
-        return OpenMoticsShutters(self)
-
-    @property
-    def thermostats(self) -> OpenMoticsThermostats:
-        """Get thermostats.
-
-        Returns
-        -------
-            OpenMoticsThermostats
-
-        """
-        return OpenMoticsThermostats(self)
-
-    async def get(self, path: str, headers: dict[str, Any] | None = None, **kwargs: Any) -> Any:
-        """Make get request using the underlying aiohttp.ClientSession.
-
-        Args:
-        ----
-            path: string
-            **kwargs: any
-
-        Returns:
-        -------
-            response json or text
-
-        """
-        headers = await self._get_auth_headers(headers)
-        return await self._request(
-            path,
-            method=aiohttp.hdrs.METH_GET,
-            headers=headers,
-            **kwargs,
-        )
-
-    async def post(self, path: str, headers: dict[str, Any] | None = None, **kwargs: Any) -> Any:
-        """Make get request using the underlying aiohttp.ClientSession.
-
-        Args:
-        ----
-            path: path
-            **kwargs: extra args
-
-        Returns:
-        -------
-            response json or text
-
-        """
-        headers = await self._get_auth_headers(headers)
-        return await self._request(
-            path,
-            method=aiohttp.hdrs.METH_POST,
-            **kwargs,
-        )
-
-    async def close(self) -> None:
-        """Close open client session."""
-        if self.session and self._close_session:
-            await self.session.close()
-
-    async def __aenter__(self) -> Self:
-        """Async enter.
-
-        Returns
-        -------
-            OpenMoticsCloud: The OpenMoticsCloud object.
-
-        """
-        return self
-
-    async def __aexit__(self, *_exc_info: object) -> None:
-        """Async exit.
-
-        Args:
-        ----
-            *_exc_info: Exec type.
-
-        """
-        await self.close()
+    async def get_token(self) -> None:
+        """Login to the gateway and set the token."""
+        raise NotImplementedError

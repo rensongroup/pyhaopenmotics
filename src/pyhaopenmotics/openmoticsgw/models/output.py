@@ -2,118 +2,60 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import Any
 
+from mashumaro import field_options
+from mashumaro.mixins.orjson import DataClassORJSONMixin
+
+from .base import OpenMoticsBase
 from .const import OPENMOTICS_OUTPUT_TYPE_TO_NAME
-from .location import Location
+from .location import Location  # noqa: TC001
 
 
 @dataclass
-class Status:
+class Status(DataClassORJSONMixin):
     """Class holding the status."""
 
-    on: bool
-    locked: bool
-    manual_override: bool
-    value: int
+    on: bool = field(default=False)
+    locked: bool = field(default=False)
+    manual_override: bool = field(default=False)
+    value: int = field(metadata=field_options(alias="dimmer"), default=0)
 
-    @staticmethod
-    def from_dict(data: dict[str, Any]) -> Status:
-        """Return Status object from OpenMotics API response.
-
-        Args:
-        ----
-            data: The data from the OpenMotics API.
-
-        Returns:
-        -------
-            A Status object.
-
-        """
-        return Status(
-            # on = True if status = 1
-            on=data.get("status") == 1,
-            locked=data.get("locked", False),
-            value=data.get("dimmer", 0),
-            manual_override=data.get("manual_override", False),
-        )
+    @classmethod
+    def __pre_deserialize__(cls, d: dict[Any, Any]) -> dict[Any, Any]:
+        if d.get("status") == 1:
+            d["on"] = True
+        return d
 
 
 @dataclass
-class Output:
-    """Class holding an OpenMotics Output.
-
-    # noqa: E800
-    # [{
-    #     'name': 'name1',
-    #     'type': 'OUTLET',
-    #     'capabilities': ['ON_OFF'],
-    #     'location': {'floor_coordinates': {'x': None, 'y': None},
-    #          'installation_id': 21,
-    #          'gateway_id': 408,
-    #          'floor_id': None,
-    #          'room_id': None},
-    #     'metadata': None,
-    #     'status': {'on': False, 'locked': False, 'manual_override': False},
-    #     'last_state_change': 1633099611.275243,
-    #     'id': 18,
-    #     '_version': 1.0
-    #     },{
-    #     'name': 'name2',
-    #     'type': 'OUTLET',
-    #     ...
-    """
+class Output(OpenMoticsBase, DataClassORJSONMixin):
+    """Class holding an OpenMotics Output."""
 
     # pylint: disable=too-many-instance-attributes
-    idx: int
-    local_id: int
-    name: str
-    output_type: str
-    location: Location
-    capabilities: list[str]
-    metadata: dict[str, Any]
-    status: Status
-    last_state_change: float
-    version: str
+    output_type: str = field(default="Unknown")
+    location: Location | None = field(default=None)
+    capabilities: list[str] = field(default_factory=lambda: ["ON_OFF"])
+    metadata: dict[str, Any] = field(default_factory=dict)
+    status: Status | None = field(default=None)
+    last_state_change: float = field(default=0.0)
+    version: str = field(default="0.0")
 
-    @staticmethod
-    def from_dict(data: dict[str, Any]) -> Output | None:
-        """Return Output object from OpenMotics API response.
+    @classmethod
+    def __pre_deserialize__(cls, d: dict[Any, Any]) -> dict[Any, Any]:
+        d = super().__pre_deserialize__(d)
+        d["location"] = d.copy()
 
-        Args:
-        ----
-            data: The data from the OpenMotics API.
+        output_type_id = d.get("type", 0)
+        d["output_type"] = OPENMOTICS_OUTPUT_TYPE_TO_NAME.get(output_type_id, "Unknown")
 
-        Returns:
-        -------
-            A Output object.
-
-        """
-        output_type = OPENMOTICS_OUTPUT_TYPE_TO_NAME[data.get("type", 0)]
-
-        status = Status.from_dict({})
-        if "status" in data:
-            status = Status.from_dict(data.get("status", {}))
-
-        # Switch can always turn on/OFF
         capabilities = ["ON_OFF"]
-        # Dimmmer
-        if data.get("module_type") == "D":
+        if d.get("module_type") == "D":
             capabilities.append("RANGE")
+        d["capabilities"] = capabilities
 
-        return Output(
-            idx=data.get("id", 0),
-            local_id=data.get("id", 0),
-            name=data.get("name", "None"),
-            output_type=output_type,
-            location=Location.from_dict(data),
-            capabilities=capabilities,
-            metadata={},
-            status=status,
-            last_state_change=data.get("last_state_change"),
-            version=data.get("version", "0.0"),
-        )
+        return d
 
     def __str__(self) -> str:
         """Represent the class objects as a string.

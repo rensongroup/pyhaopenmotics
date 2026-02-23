@@ -8,7 +8,7 @@ from typing import Any
 from mashumaro import field_options
 from mashumaro.mixins.orjson import DataClassORJSONMixin
 
-from .location import Location
+from .location import Location  # noqa: TC001
 
 zombie_status = {"on": None, "locked": None, "manual_override": None, "value": None}
 

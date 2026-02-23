@@ -5,10 +5,10 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import TYPE_CHECKING
 
-from pyhaopenmotics.cloud.models.sensor import Sensor
+from .models.sensor import Sensor
 
 if TYPE_CHECKING:
-    from pyhaopenmotics.client.openmoticscloud import (
+    from ..client.openmoticscloud import (
         OpenMoticsCloud,  # pylint: disable=R0401
     )
 

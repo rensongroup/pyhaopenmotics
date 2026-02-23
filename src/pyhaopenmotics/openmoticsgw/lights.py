@@ -6,8 +6,7 @@ from dataclasses import dataclass
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from pyhaopenmotics.localgateway import LocalGateway  # pylint: disable=R0401
-
+    from ..client.localgateway import LocalGateway  # pylint: disable=R0401
     from .models.light import Light
 
 

@@ -5,14 +5,14 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import TYPE_CHECKING, Any
 
-from pyhaopenmotics.helpers import merge_dicts
-from pyhaopenmotics.openmoticsgw.models.thermostat import (
+from ..helpers import merge_dicts
+from ..openmoticsgw.models.thermostat import (
     ThermostatGroup,
     ThermostatUnit,
 )
 
 if TYPE_CHECKING:
-    from pyhaopenmotics.localgateway import LocalGateway  # pylint: disable=R0401
+    from ..client.localgateway import LocalGateway  # pylint: disable=R0401
 
 
 @dataclass
@@ -240,6 +240,10 @@ class OpenMoticsThermostatUnits:
             Dict with all ThermostatUnit
 
         """
+        if thermostatunit_filter is not None:
+            # implemented later
+            pass
+
         ###############################################################################
         # Code has changed in latest version of gateway:
         #      get_thermostat_configurations does NOT exist anymore
@@ -255,26 +259,26 @@ class OpenMoticsThermostatUnits:
         ]
         return [ThermostatUnit.from_dict(device) for device in empty_device]  # pyright: ignore[reportReturnType]
 
-        # TO BE FIXED
-        #
-        ###############################################################################
-        if len(self.thermostatunit_configs) == 0:
-            goc = await self._omcloud.exec_action("get_thermostat_configurations")
-            if goc["success"] is True:
-                self.thermostatunit_configs = goc["config"]
+        # # TO BE FIXED
+        # #
+        # ###############################################################################
+        # if len(self.thermostatunit_configs) == 0:
+        #     goc = await self._omcloud.exec_action("get_thermostat_configurations")
+        #     if goc["success"] is True:
+        #         self.thermostatunit_configs = goc["config"]
 
-        thermostatunit_status = await self._omcloud.exec_action("get_thermostat_status")
-        status = thermostatunit_status["status"]
+        # thermostatunit_status = await self._omcloud.exec_action("get_thermostat_status")
+        # status = thermostatunit_status["status"]
 
-        data = merge_dicts(self.thermostatunit_configs, "status", status)
+        # data = merge_dicts(self.thermostatunit_configs, "status", status)
 
-        thermostatunits = [ThermostatUnit.from_dict(device) for device in data]
+        # thermostatunits = [ThermostatUnit.from_dict(device) for device in data]
 
-        if thermostatunit_filter is not None:
-            # implemented later
-            pass
+        # if thermostatunit_filter is not None:
+        #     # implemented later
+        #     pass
 
-        return thermostatunits
+        # return thermostatunits
 
     async def get_by_id(
         self,

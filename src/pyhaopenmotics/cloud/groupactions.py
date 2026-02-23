@@ -5,10 +5,10 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import TYPE_CHECKING, Any
 
-from pyhaopenmotics.cloud.models.groupaction import GroupAction
+from .models.groupaction import GroupAction
 
 if TYPE_CHECKING:
-    from pyhaopenmotics.client.openmoticscloud import (
+    from ..client.openmoticscloud import (
         OpenMoticsCloud,  # pylint: disable=R0401
     )
 

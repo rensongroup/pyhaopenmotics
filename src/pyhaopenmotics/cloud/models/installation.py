@@ -103,7 +103,6 @@ class Installation(DataClassORJSONMixin):
     user_role: dict[str, Any] | None = field(default=None)
     registration_key: str | None = field(default=None)
     platform: str | None = field(default=None)
-    # TODO @woutercoppens: fix later
     building_roles: list | None = field(default=None)
     network: Network | None = field(default=None)
     flags: dict[str, Any] | None = field(default=None)

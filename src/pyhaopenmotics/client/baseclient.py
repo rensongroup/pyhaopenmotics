@@ -7,12 +7,10 @@ import asyncio
 # import abc
 import logging
 import socket
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING, Any, TypeVar
 
 import aiohttp
-import backoff
-
-# import websockets
+import stamina
 from yarl import URL
 
 from pyhaopenmotics.__version__ import __version__
@@ -31,13 +29,20 @@ if TYPE_CHECKING:
 _LOGGER = logging.getLogger(__name__)
 
 StrOrURL = str | URL
+T = TypeVar("T")
 
 
 class BaseClient:
-    """Docstring."""
+    """Base client for interacting with the OpenMotics API."""
 
-    _wsclient: aiohttp.ClientWebSocketResponse | None = None
-    _close_session: bool = False
+    _inputs_class: type | None = None
+    _outputs_class: type | None = None
+    _groupactions_class: type | None = None
+    _lights_class: type | None = None
+    _sensors_class: type | None = None
+    _energysensors_class: type | None = None
+    _shutters_class: type | None = None
+    _thermostats_class: type | None = None
 
     def __init__(
         self,
@@ -50,34 +55,79 @@ class BaseClient:
         ssl_context: ssl.SSLContext | None = None,
         port: int = 443,
     ) -> None:
-        """Initialize connection with the OpenMotics LocalGateway API.
+        """Initialize connection with the OpenMotics API.
 
         Args:
-        ----
-            token: str
-            session: aiohttp.client.ClientSession
-            token_refresh_method: token refresh function
-            port: Port on which the API runs, usually 3000.
-            request_timeout: Max timeout to wait for a response from the API.
+            token: Authentication token.
+            request_timeout: Max timeout (seconds) for API requests.
             session: Optional, shared, aiohttp client session.
-            tls: True, when TLS/SSL should be used.
-            username: Username for HTTP auth, if enabled.
-            ssl_context: ssl.SSLContext.
+            token_refresh_method: Async function to refresh the token.
+            verify_ssl: Whether to verify SSL certificates.
+            ssl_context: Optional SSL context.
+            port: API port (usually 443 or 3000).
 
         """
         self.user_agent = f"PyHAOpenMotics/{__version__}"
-        self.token = None if token is None else token.strip()
-        self.token_expires_at: float = 0
+        self.token = token.strip() if token else None
+        self.token_expires_at: float = 0.0
 
         self.request_timeout = request_timeout
         self.session = session
+        self._close_session = False
         self.verify_ssl = verify_ssl
         self.ssl_context = ssl_context
         self.port = port
 
         self.token_refresh_method = token_refresh_method
 
-    @backoff.on_exception(backoff.expo, OpenMoticsConnectionError, max_tries=3, logger=None)
+    def _get_api_module(self, module_class: type[T] | None, name: str) -> T:
+        """Get an instance of an API module."""
+        if module_class is None:
+            msg = f"{name} class not defined"
+            raise NotImplementedError(msg)
+        return module_class(self)  # type: ignore[call-arg]
+
+    @property
+    def inputs(self) -> Any:
+        """Get inputs module."""
+        return self._get_api_module(self._inputs_class, "Inputs")
+
+    @property
+    def outputs(self) -> Any:
+        """Get outputs module."""
+        return self._get_api_module(self._outputs_class, "Outputs")
+
+    @property
+    def groupactions(self) -> Any:
+        """Get group actions module."""
+        return self._get_api_module(self._groupactions_class, "Groupactions")
+
+    @property
+    def lights(self) -> Any:
+        """Get lights module."""
+        return self._get_api_module(self._lights_class, "Lights")
+
+    @property
+    def sensors(self) -> Any:
+        """Get sensors module."""
+        return self._get_api_module(self._sensors_class, "Sensors")
+
+    @property
+    def energysensors(self) -> Any:
+        """Get energy sensors module."""
+        return self._get_api_module(self._energysensors_class, "Energy sensors")
+
+    @property
+    def shutters(self) -> Any:
+        """Get shutters module."""
+        return self._get_api_module(self._shutters_class, "Shutters")
+
+    @property
+    def thermostats(self) -> Any:
+        """Get thermostats module."""
+        return self._get_api_module(self._thermostats_class, "Thermostats")
+
+    @stamina.retry(on=OpenMoticsConnectionError, attempts=3)
     async def _request(
         self,
         path: str,
@@ -88,41 +138,32 @@ class BaseClient:
         scheme: str = "https",
         **kwargs: Any,
     ) -> Any:
-        """Make post request using the underlying aiohttp clientsession.
+        """Make a request to the OpenMotics API.
 
-        with the default timeout of 15s. in case of retryable exceptions,
-        requests are retryed for up to 10 times or 5 minutes.
+        Retries on connection errors.
 
         Args:
-        ----
-            path: path
-            method: post
-            data: dict
-            headers: dict
-            scheme: str
-            **kwargs: extra args
+            path: API path.
+            method: HTTP method (default: POST).
+            data: JSON data to send.
+            headers: HTTP headers.
+            scheme: URL scheme (http/https).
+            **kwargs: Extra arguments for httpx.request.
 
         Returns:
-        -------
-            response json or text
+            Response JSON or text.
 
         Raises:
-        ------
-            OpenMoticsConnectionError: An error occurred while communication with
-                the OpenMotics API.
-            OpenMoticsConnectionSslError: Error with SSL certificates.
-            OpenMoticsConnectionTimeoutError: A timeout occurred while communicating
-                with the OpenMotics API.
-            AuthenticationException: raised when token is expired.
+            OpenMoticsConnectionError: Communication error.
+            OpenMoticsConnectionSslError: SSL error.
+            OpenMoticsConnectionTimeoutError: Timeout error.
+            AuthenticationError: Token expired or invalid.
 
         """
         if self.token_refresh_method is not None:
             self.token = await self.token_refresh_method()
 
-        url = await self._get_url(
-            path=path,
-            scheme=scheme,
-        )
+        url = await self._get_url(path=path, scheme=scheme)
 
         if self.session is None:
             self.session = aiohttp.ClientSession()
@@ -130,7 +171,7 @@ class BaseClient:
 
         try:
             async with asyncio.timeout(self.request_timeout):
-                resp = await self.session.request(
+                response = await self.session.request(
                     method,
                     url,
                     data=data,
@@ -140,14 +181,19 @@ class BaseClient:
                 )
 
             if _LOGGER.isEnabledFor(logging.DEBUG):
-                body = await resp.text()
+                body = await response.text()
                 _LOGGER.debug(
                     "Request with status=%s, body=%s",
-                    resp.status,
+                    response.status,
                     body,
                 )
 
-            resp.raise_for_status()
+            response.raise_for_status()
+
+            content_type = response.headers.get("Content-Type", "")
+            if "application/json" in content_type:
+                return await response.json()
+            return await response.text()
 
         except TimeoutError as exception:
             msg = "Timeout occurred while connecting to OpenMotics API."
@@ -159,87 +205,113 @@ class BaseClient:
         except aiohttp.ClientResponseError as exception:
             if exception.status in [401, 403]:
                 raise AuthenticationError from exception
-            msg = "Error occurred while communicating with OpenMotics API."
+            msg = f"Error occurred while communicating with OpenMotics API: {exception.status}, message='{exception.message}'"
             raise OpenMoticsConnectionError(msg) from exception
         except (socket.gaierror, aiohttp.ClientError) as exception:
             msg = "Error occurred while communicating with OpenMotics API."
             raise OpenMoticsConnectionError(msg) from exception
-
-        if "application/json" in resp.headers.get("Content-Type", ""):
-            return await resp.json()
-
-        return await resp.text()
-
-    # @property
-    # def token(self) -> str:
-    #     return self.token
-
-    # @property.setter
-    # def token(self, token: str | None is None) -> None:
-    #     self.token = token
+        except Exception as exception:
+            msg = f"Unexpected error occurred while communicating with OpenMotics API: {exception}"
+            raise OpenMoticsConnectionError(msg) from exception
 
     async def get_token(self) -> None:
-        """Login to the gateway: sets the token in the connector."""
+        """Login to the gateway and set the token."""
         raise NotImplementedError
 
-    async def _get_url(self, path: str, scheme: str = "https") -> str:
-        """Update the auth headers to include a working token.
+    async def get(self, path: str, headers: dict[str, Any] | None = None, **kwargs: Any) -> Any:
+        """Make a GET request.
 
         Args:
-        ----
-            path: str
-            scheme: str
+            path: API path.
+            headers: Optional HTTP headers.
+            **kwargs: Extra arguments for request.
 
         Returns:
-        -------
-            url: str
+            Response JSON or text.
 
         """
-        # Base class should implement this
+        headers = await self._get_auth_headers(headers)
+        return await self._request(
+            path,
+            method=aiohttp.hdrs.METH_GET,
+            headers=headers,
+            **kwargs,
+        )
+
+    async def post(
+        self,
+        path: str,
+        data: dict[str, Any] | None = None,
+        headers: dict[str, Any] | None = None,
+        **kwargs: Any,
+    ) -> Any:
+        """Make a POST request.
+
+        Args:
+            path: API path.
+            data: JSON data to send.
+            headers: Optional HTTP headers.
+            **kwargs: Extra arguments for request.
+
+        Returns:
+            Response JSON or text.
+
+        """
+        headers = await self._get_auth_headers(headers)
+        return await self._request(
+            path,
+            method=aiohttp.hdrs.METH_POST,
+            data=data,
+            headers=headers,
+            **kwargs,
+        )
+
+    async def _get_url(self, path: str, scheme: str = "https") -> str:
+        """Construct the full URL.
+
+        Args:
+            path: API path.
+            scheme: URL scheme.
+
+        Returns:
+            Full URL string.
+
+        """
         raise NotImplementedError
 
     async def _get_ws_connection_url(self) -> str:
+        """Get the WebSocket connection URL."""
         raise NotImplementedError
 
     async def _get_auth_headers(
         self,
         headers: dict[str, Any] | None = None,
     ) -> dict[str, Any]:
-        """Update the auth headers to include a working token.
+        """Get headers with authentication token.
 
         Args:
-        ----
-            headers: dict
+            headers: Base headers.
 
         Returns:
-        -------
-            headers
+            Headers with User-Agent and Authorization.
 
         """
-        # Base class should implement this
-        raise NotImplementedError
+        headers = headers or {}
+        headers["User-Agent"] = self.user_agent
+        if self.token:
+            headers["Authorization"] = f"Bearer {self.token}"
+        return headers
 
     async def close(self) -> None:
-        """Close open client session."""
+        """Close the client session."""
         if self.session and self._close_session:
             await self.session.close()
+            self.session = None
 
     async def __aenter__(self) -> Self:
-        """Async enter.
-
-        Returns
-        -------
-            LocalGateway: The LocalGateway object.
-
-        """
+        """Async context manager enter."""
         return self
 
-    async def __aexit__(self, *_exc_info: object) -> None:
-        """Async exit.
-
-        Args:
-        ----
-            *_exc_info: Exec type.
-
-        """
+    async def __aexit__(self, *exc_info: object) -> None:
+        """Async context manager exit."""
         await self.close()

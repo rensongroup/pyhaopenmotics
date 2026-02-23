@@ -1,40 +1,11 @@
 ---
 version: 2
 updates:
-  - package-ecosystem: npm
-    directory: "/"
-    schedule:
-      interval: daily
-    commit-message:
-      prefix: "deps"
-      include: "scope"
-    open-pull-requests-limit: 5
-    labels:
-      - "dependencies"
-      - "automated-update"
-  - package-ecosystem: pip
-    directory: "/"
-    schedule:
-      interval: daily
-  - package-ecosystem: pip
-    directory: "/.github/workflows"
-    schedule:
-      interval: daily
-    commit-message:
-      prefix: "deps"
-      include: "scope"
-    open-pull-requests-limit: 5
-    labels:
-      - "dependencies"
-      - "automated-update"
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
-      interval: daily
-    commit-message:
-      prefix: "actions"
-      include: "scope"
-    open-pull-requests-limit: 5
-    labels:
-      - "actions"
-      - "automated-update"
+      interval: "weekly"
+    groups:
+      actions-deps:
+        patterns:
+          - "*"

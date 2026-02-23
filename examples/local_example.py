@@ -2,7 +2,6 @@
 """Local Example.
 
 How to use this script:
-    pip install python-dotenv
     export LOCALGW='192.168.0.2'
     export USER_NAME="dnfqsdfjqsjfqsdjfqf"
     export PASSWORD="djfqsdkfjqsdkfjqsdkfjqsdkfjkqsdjfkjdkfqjdskf"
@@ -17,18 +16,18 @@ import logging
 import os
 import ssl
 
-try:
-    from dotenv import load_dotenv
-except ModuleNotFoundError as exc:
-    msg = "You have to run 'pip install python-dotenv' first"
-    raise ImportError(msg) from exc
+from dotenv import load_dotenv
 
+# try:
+#     from dotenv import load_dotenv
+# except ModuleNotFoundError as exc:
+#     msg = "You have to run 'pip install python-dotenv' first"
+#     raise ImportError(msg) from exc
 from pyhaopenmotics import LocalGateway
 
-# UNCOMMENT THIS TO SEE ALL THE HTTPX INTERNAL LOGGING
 log = logging.getLogger()
 log.setLevel(logging.DEBUG)
-log_format = logging.Formatter("[%(asctime)s] [%(levelname)s] - %(message)s")
+log_format = logging.Formatter("%(levelname)s [%(asctime)s] %(name)s - %(message)s")
 console = logging.StreamHandler()
 console.setLevel(logging.DEBUG)
 console.setFormatter(log_format)

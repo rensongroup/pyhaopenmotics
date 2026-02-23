@@ -2,63 +2,29 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import Any
 
-from .location import Location
+from mashumaro.mixins.orjson import DataClassORJSONMixin
+
+from .base import OpenMoticsBase
+from .location import Location  # noqa: TC001
 
 
 @dataclass
-class GroupAction:
-    """Class holding an OpenMotics GroupAction.
-
-    # noqa: E800
-    # {
-    # "_version": <version>,
-    # "actions": [
-    #     <action type>, <action number>,
-    #     <action type>, <action number>,
-    #     ...
-    # ],
-    # "id": <id>,
-    # "location": {
-    #     "installation_id": <installation id>
-    # },
-    # "name": "<name>"
-    # }
-    """
+class GroupAction(OpenMoticsBase, DataClassORJSONMixin):
+    """Class holding an OpenMotics GroupAction."""
 
     # pylint: disable=too-many-instance-attributes
-    idx: int
-    local_id: int
-    name: str
-    actions: list[Any]
-    location: Location
-    version: str
+    actions: list[Any] = field(default_factory=lambda: [""])
+    location: Location | None = field(default=None)
+    version: str = field(default="0.0")
 
-    @staticmethod
-    def from_dict(data: dict[str, Any]) -> GroupAction | None:
-        """Return GroupAction object from OpenMotics API response.
-
-        Args:
-        ----
-            data: The data from the OpenMotics API.
-
-        Returns:
-        -------
-            A GroupAction object.
-
-        """
-        actions = [""]
-
-        return GroupAction(
-            idx=data.get("id", 0),
-            local_id=data.get("id", 0),
-            name=data.get("name", "None"),
-            actions=actions,
-            location=Location.from_dict(data),
-            version=data.get("version", "0.0"),
-        )
+    @classmethod
+    def __pre_deserialize__(cls, d: dict[Any, Any]) -> dict[Any, Any]:
+        d = super().__pre_deserialize__(d)
+        d["location"] = d.copy()
+        return d
 
     def __str__(self) -> str:
         """Represent the class objects as a string.
