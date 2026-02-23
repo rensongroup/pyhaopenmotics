@@ -30,13 +30,13 @@ jobs:
         run: uv sync --all-extras
 
       - name: Ruff Lint Check
-        run: uv run ruff check --fix --exclude=examples --exclude=tests  .
+        run: uvx ruff check --fix --exclude=examples --exclude=tests  .
 
       - name: Ruff Format Check
-        run: uv run ruff format --diff .
+        run: uvx ruff format --diff .
 
       - name: Python Type Checks (Pyrefly)
-        run: uv run pyrefly check -c pyproject.toml
+        run: uvw pyrefly check -c pyproject.toml
 
       - name: Test with pytest
-        run: uv run pytest
+        run: uvw pytest
