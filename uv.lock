@@ -1016,7 +1016,6 @@ docs = [
 ]
 lint = [
     { name = "pyrefly" },
-    { name = "ruff" },
 ]
 test = [
     { name = "authlib" },
@@ -1062,10 +1061,7 @@ dev = [
     { name = "ty" },
 ]
 docs = [{ name = "mkdocs" }]
-lint = [
-    { name = "pyrefly" },
-    { name = "ruff" },
-]
+lint = [{ name = "pyrefly" }]
 test = [
     { name = "authlib" },
     { name = "coverage" },
