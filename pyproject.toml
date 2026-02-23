@@ -70,7 +70,7 @@ test = [
   "ty",
 ]
 docs = [ "mkdocs" ]
-lint = [ "pyrefly", "ruff" ]
+lint = [ "pyrefly" ]
 tools = [ "ruff", "rust-just" ]
 
 [tool.hatch]
@@ -132,14 +132,14 @@ infer-with-first-use = false
 errors.bad-argument-type = "ignore"
 errors.bad-override = "ignore"
 
-[tool.pyright]
-venvPath = "."
-venv = ".venv"
-include = [ "src" ]
-exclude = [ "examples", "tests" ]
-reportArgumentType = false
-reportCallIssue = false
-reportIncompatibleMethodOverride = false
+# [tool.pyright]
+# venvPath = "."
+# venv = ".venv"
+# include = ["src"]
+# exclude = ["examples", "tests"]
+# reportArgumentType = false
+# reportCallIssue = false
+# reportIncompatibleMethodOverride = false
 
 [tool.bandit]
 exclude_dirs = [ "tests" ]
