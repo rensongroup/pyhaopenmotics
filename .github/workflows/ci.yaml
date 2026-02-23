@@ -19,5 +19,7 @@ jobs:
         uses: astral-sh/setup-uv@v6
       - name: Install locked dependencies
         run: uv sync --all-extras --dev
-      - name: Run mypy
+      - name: Install pyrefly
+        run: pip install pyrefly
+      - name: Run pre-commit (prek)
         run: uvx prek --all-files
