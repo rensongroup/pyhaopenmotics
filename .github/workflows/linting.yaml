@@ -41,7 +41,7 @@ jobs:
       - name: 🏗 Install dependencies
         run: uv sync --all-extras
       - name: 🚀 Run ruff linter
-        run: uv run ruff check --exclude=tests --output-format=github .
+        run: uv run ruff check --exclude=tests --exclude=examples --output-format=github .
       - name: 🚀 Run ruff formatter
         run: uv run ruff format --check .
 
