@@ -40,7 +40,7 @@ jobs:
         run: uv sync --all-extras --dev
       - name: 🏗 Install pyrefly
         run: uv pip install pyrefly
-      - name:  🚀 Run pre-commit (prek)
+      - name: 🚀 Run pre-commit (prek)
         run: |
           echo '```console' > "$GITHUB_STEP_SUMMARY"
           # Enable color output for prek and remove it for the summary
