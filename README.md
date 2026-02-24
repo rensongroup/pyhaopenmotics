@@ -73,6 +73,6 @@ This project is licensed under the AGPLv3 License - see the LICENSE.md file for 
 [woutercoppens]: https://github.com/woutercoppens
 [keepchangelog]: http://keepachangelog.com/en/1.0.0/
 [maintenance-shield]: https://img.shields.io/maintenance/yes/2026.svg
-[project-stage-shield]: https://img.shields.io/badge/project%20stage-experimental-yellow.svg
+[project-stage-shield]: https://img.shields.io/badge/project%20stage-experimental-green.svg
 [releases]: https://github.com/rensongroup/pyhaopenmotics/releases
 [semver]: http://semver.org/spec/v2.0.0.html
