@@ -37,7 +37,7 @@ participating, you are expected to uphold this code.
 
 1. **Check existing issues**: Search for similar issues or feature requests
 2. **Discuss major changes**: For significant features, open a discussion first
-3. **Review the architecture**: Read [CLAUDE.md](CLAUDE.md) for technical details
+3. **Review the architecture**: Read the code for technical details
 
 ---
 
@@ -66,27 +66,24 @@ If you use VS Code with the DevContainer extension:
 ```bash
 # Clone the repository
 git clone https://github.com/rensongroup/pyhaopenmotics.git
-cd homematicip_local
+cd pyhaopenmotics
 
 # Create virtual environment
-python3.14-m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
+python3 -m venv venv
+source venv/bin/activate
 
 # Install dependencies
 uv pip install -r pyproject.toml --extra dev
 
 # Setup pre-commit hooks
-uv run pre-commit install --install-hooks
+uv run prek install --install-hooks
 ```
 
 ### Verify Installation
 
 ```bash
-# Run tests
-pytest tests/
-
 # Run code quality checks
-uv run pre-commit run --all-files
+uv run prek run --all-files
 ```
 
 ---
@@ -186,16 +183,16 @@ def device_address(self) -> str:
 Pre-commit hooks run automatically on every commit. They enforce:
 
 - Code formatting (ruff)
-- Type checking (mypy)
-- Linting (ruff, pylint)
+- Type checking (pyreflyy)
+- Linting (ruff)
 - Spell checking (codespell)
-- YAML validation (yamllint)
+- YAML validation (ruff)
 - Translation validation
 
 **Run manually:**
 
 ```bash
-pre-commit run --all-files
+prek run --all-files
 ```
 
 **Do NOT bypass** hooks with `--no-verify` unless absolutely necessary.
@@ -270,7 +267,7 @@ open htmlcov/index.html
    pytest --cov=pyhaopenmotics tests
 
    # Run prek hooks
-   pre-commit run --all-files
+   prek run --all-files
    ```
 
 5. **Commit your changes**:
@@ -305,7 +302,7 @@ Follow [Conventional Commits](https://www.conventionalcommits.org/):
 **Examples**:
 
 ```bash
-feat(climate): Add boost mode support for HmIP-eTRV-2
+feat(climate): Add boost mode support for lights
 
 Implements boost mode functionality with new service
 and entity attributes for thermostat devices.
@@ -316,7 +313,7 @@ Closes #123
 ```bash
 fix(config_flow): Handle connection timeout gracefully
 
-Added retry logic with exponential backoff for CCU
+Added retry logic with exponential backoff for gateway
 connection validation during config flow.
 ```
 
@@ -359,7 +356,6 @@ Use the appropriate issue template:
 
 - Home Assistant version
 - Integration version
-- CCU/hub type and version
 - Device model (if device-specific)
 - Relevant logs (enable debug logging if needed)
 
