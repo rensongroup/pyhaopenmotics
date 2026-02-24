@@ -68,17 +68,14 @@ For a full list of all authors and contributors, check [the contributor's page][
 This project is licensed under the AGPLv3 License - see the LICENSE.md file for details
 
 [license-shield]: https://img.shields.io/badge/License-AGPL_v3-blue.svg
-[build-shield]: https://github.com/openmotics/pyhaopenmotics/actions/workflows/tests.yaml/badge.svg
-[build]: https://github.com/openmotics/pyhaopenmotics/actions/workflows/tests.yaml
-[code-quality-shield]: https://img.shields.io/lgtm/grade/python/g/openmotics/pyhaopenmotics.svg?logo=lgtm&logoWidth=18
-[code-quality]: https://lgtm.com/projects/g/openmotics/pyhaopenmotics/context:python
-[contributors]: https://github.com/openmotics/pyhaopenmotics/graphs/contributors
+[build-shield]: https://github.com/rensongroup/pyhaopenmotics/actions/workflows/pyrefly.yaml/badge.svg
+[build]: https://github.com/rensongroup/pyhaopenmotics/actions/workflows/pyrefly.yaml
+[code-quality-shield]: https://img.shields.io/lgtm/grade/python/g/rensongroup/pyhaopenmotics.svg?logo=lgtm&logoWidth=18
+[code-quality]: https://lgtm.com/projects/g/rensongroup/pyhaopenmotics/context:python
+[contributors]: https://github.com/rensongroup/pyhaopenmotics/graphs/contributors
 [woutercoppens]: https://github.com/woutercoppens
 [keepchangelog]: http://keepachangelog.com/en/1.0.0/
 [maintenance-shield]: https://img.shields.io/maintenance/yes/2026.svg
-[poetry-install]: https://python-poetry.org/docs/#installation
-[pre-commit]: https://pre-commit.com/
 [project-stage-shield]: https://img.shields.io/badge/project%20stage-experimental-yellow.svg
-[pypi]: https://pypi.org/project/pyhaopenmotics/
-[releases]: https://github.com/openmotics/pyhaopenmotics/releases
+[releases]: https://github.com/rensongroup/pyhaopenmotics/releases
 [semver]: http://semver.org/spec/v2.0.0.html
