@@ -1,8 +1,8 @@
 ---
 # pre-commit.ci config
-# ci:
-# The free tier of pre-commit.ci doesn't allow to install local dependencies.
-# The pyrefly hook requires pyrefly to be installed in the system, so we can't use pre-commit.ci for it.
+ci:
+  skip: [pyrefly-check] # Skip specific hooks in CI only
+  run_on_branches: [main] # Only run on these specific branches
 
 repos:
   # pyproject.toml
