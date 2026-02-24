@@ -1,9 +1,7 @@
 # Python: Asynchronous Python client for the Openmotics API
 
-[![Project Stage][project-stage-shield] ![Project Maintenance][maintenance-shield]
-[![License AGPL v3][license-shield]](LICENSE.md)
-
-[![Build Status][build-shield]][build]
+![Project Stage][project-stage-shield] ![Project Maintenance][maintenance-shield]
+[![License AGPL v3][license-shield]](LICENSE.md) [![Build Status][build-shield]][build]
 
 Asynchronous Python client for the OpenMotics API.
 
