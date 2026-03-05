@@ -15,9 +15,9 @@ from .location import Location  # noqa: TC001
 class Status(DataClassORJSONMixin):
     """Class holding the status."""
 
-    humidity: float = field(default=0.0)
-    temperature: float = field(default=0.0)
-    brightness: int = field(default=0)
+    humidity: float | None = field(default=None)
+    temperature: float | None = field(default=None)
+    brightness: int | None = field(default=None)
 
 
 @dataclass
