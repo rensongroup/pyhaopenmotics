@@ -97,6 +97,9 @@ lint.per-file-ignores."src/pyhaopenmotics/client/websocket.py" = [
   "FBT001",
   "FBT002",
 ]
+lint.per-file-ignores."src/pyhaopenmotics/const.py" = [
+  "S105", # hardcoded-password-string
+]
 lint.per-file-ignores."src/pyhaopenmotics/openmoticsgw/models/energy.py" = [
   "PLR2004",
 ]
