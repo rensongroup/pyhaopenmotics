@@ -23,12 +23,11 @@ classifiers = [
 ]
 dynamic = [ "version" ]
 dependencies = [
-  "aiohttp>=3.11",
-  "mashumaro>=3",
-  "orjson>=3.10",
-  "stamina>=25",
+  "aiohttp>=3.13",
+  "mashumaro>=3.16",
+  "orjson>=3.11",
   "websockets>=15",
-  "yarl>=1.18",
+  "yarl>=1.22",
 ]
 # optional-dependencies.build = ["hatch"]
 # optional-dependencies.dev = [

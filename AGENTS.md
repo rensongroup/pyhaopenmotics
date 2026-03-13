@@ -80,7 +80,6 @@ class Output(DataClassORJSONMixin):
 - All I/O operations must be `async` using `aiohttp`
 - **Best Practices**:
   - Use `async with` for client lifecycle
-  - Use `stamina` for retry logic on `_request` calls
   - Avoid blocking calls (`time.sleep`, synchronous requests)
 
 ### Error Handling
@@ -131,6 +130,6 @@ We use `uv` for dependency management and `just` for task automation.
 ### ✅ Use These Patterns Instead
 
 - **Async context managers**: Use `async with aiohttp.ClientSession()`
-- **Retry logic**: Use `@stamina.retry` for transient failures
+- **Retry logic**: This will be handled by HomeAssistant (coordinator.py)
 - **Type Aliases**: Use PEP 695 `type` syntax for complex types
 - **Dataclass Mixins**: Always inherit from `DataClassORJSONMixin` for models
