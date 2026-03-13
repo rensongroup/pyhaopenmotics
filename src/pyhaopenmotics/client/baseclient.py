@@ -10,7 +10,6 @@ import socket
 from typing import TYPE_CHECKING, Any, TypeVar
 
 import aiohttp
-import stamina
 from yarl import URL
 
 from pyhaopenmotics.__version__ import __version__
@@ -127,7 +126,6 @@ class BaseClient:
         """Get thermostats module."""
         return self._get_api_module(self._thermostats_class, "Thermostats")
 
-    @stamina.retry(on=OpenMoticsConnectionError, attempts=3)
     async def _request(
         self,
         path: str,
