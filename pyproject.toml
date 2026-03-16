@@ -108,6 +108,13 @@ lint.pylint.max-args = 10
 [tool.codespell]
 write-changes = true
 
+[tool.pyrefly]
+project-includes = [ "src" ]
+project-excludes = [ "examples", "tests" ]
+infer-with-first-use = false
+errors.bad-argument-type = "ignore"
+errors.bad-override = "ignore"
+
 [tool.pytest]
 testpaths = [ "tests" ]
 pythonpath = [ "src" ]
@@ -127,13 +134,6 @@ report.exclude_lines = [
   "pragma: no cover",
 ]
 
-[tool.pyrefly]
-project-includes = [ "src" ]
-project-excludes = [ "examples", "tests" ]
-infer-with-first-use = false
-errors.bad-argument-type = "ignore"
-errors.bad-override = "ignore"
-
 # [tool.pyright]
 # venvPath = "."
 # venv = ".venv"
@@ -142,7 +142,6 @@ errors.bad-override = "ignore"
 # reportArgumentType = false
 # reportCallIssue = false
 # reportIncompatibleMethodOverride = false
-
 [tool.bandit]
 exclude_dirs = [ "tests" ]
 # tests = ["B201", "B301"]
