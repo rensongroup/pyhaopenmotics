@@ -55,7 +55,7 @@ repos:
           - --branch=master
 
   - repo: https://github.com/tox-dev/pyproject-fmt
-    rev: "v2.16.2"
+    rev: "v2.19.0"
     hooks:
       - id: pyproject-fmt
 
