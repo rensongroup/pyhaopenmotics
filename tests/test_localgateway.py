@@ -3,7 +3,6 @@ from unittest.mock import AsyncMock, MagicMock
 
 import aiohttp
 import pytest
-
 from pyhaopenmotics import (
     AuthenticationError,
     LocalGateway,

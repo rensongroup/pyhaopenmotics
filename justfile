@@ -5,18 +5,6 @@
 default:
     @just --list
 
-# Install dependencies (prek, ruff, etc.)
-install:
-    uv sync --all-extras --group dev
-
-# Install only production dependencies
-install-prod:
-    uv sync
-
-# Upgrade all dependencies to their latest versions
-upgrade:
-    uv lock --upgrade
-
 # Run all tests
 test:
     uvx pytest tests/

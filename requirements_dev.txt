@@ -1,0 +1,24 @@
+# Additional development tools
+
+# Note: The following are already provided by HA's requirements_test.txt:
+#   - pytest and pytest plugins (pytest-asyncio, pytest-aiohttp, pytest-cov, etc.)
+#
+# Install with: uv pip install -r requirements_dev.txt
+
+# linting and formatting)
+ruff>=0.15.7
+
+# spell checking
+codespell>=2.4.0
+
+# hook framework for git, pre-commit, and more
+prek>=0.3.6
+
+# Type Checking
+pyrefly>=0.57.0
+
+# Better logging for development scripts
+colorlog>=6.10.0
+
+# just is a handy way to save and run project-specific commands.
+rust-just>=1.47
