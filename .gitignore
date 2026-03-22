@@ -1,11 +1,3 @@
-# Home Assistant configuration and runtime (development/testing)
-config/*
-!config/configuration.yaml
-
-# Custom components (HACS-installed dependencies and dev symlinks)
-custom_components/*
-!custom_components/openmotics/
-
 # Development tool caches and dependency locks
 .ruff_cache/
 uv.lock
@@ -17,50 +9,6 @@ uv.lock
 
 # AI agent temporary scratch files and planning notes
 .ai-scratch/
-
-# Created by https://www.toptal.com/developers/gitignore/api/linux,macos,windows,virtualenv,pythonvanilla,visualstudiocode,homeassistant
-# Edit at https://www.toptal.com/developers/gitignore?templates=linux,macos,windows,virtualenv,pythonvanilla,visualstudiocode,homeassistant
-
-### HomeAssistant ###
-# Files with personal details
-*.crt
-*.csr
-*.key
-.cloud
-.google.token
-.HA_VERSION
-.storage
-.uuid
-icloud/
-google_calendars.yaml
-harmony_media_room.conf
-home-assistant.db
-home-assistant_v2.db
-home-assistant_v2.db-*
-html5_push_registrations.conf
-image
-ip_bans.yaml
-known_devices.yaml
-phue.conf
-plex.conf
-pyozw.sqlite
-secrets.yaml
-tradfri.conf
-webostv.conf
-
-# Temporary files
-*.db-journal
-*.pid
-tts
-
-# automatically downloaded dependencies
-deps
-lib
-
-# Log files
-home-assistant.log
-home-assistant.log.*
-ozw_log.txt
 
 ### Linux ###
 *~
