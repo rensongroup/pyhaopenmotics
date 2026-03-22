@@ -48,4 +48,4 @@ jobs:
         run: |
           # Enable color output for prek
           # uv prek run --all-files --show-diff-on-failure --color always
-          uv prek run pyrefly-check --all-files --show-diff-on-failure --color always
+          uv run prek run pyrefly-check --all-files --show-diff-on-failure --color always
