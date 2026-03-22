@@ -37,11 +37,13 @@ jobs:
           path: ~/.cache/prek
           key: prek-${{ hashFiles('.pre-commit-config.yaml') }}
       - name: 🏗 Install dependencies
-        run: uv pip install --requirement requirements.txt
+        run: |
+          uv venv .venv/
+          uv pip install --requirement requirements.txt
       - name: 🏗 Install workflow dependencies
         run: uv sync --all-extras
       - name: 🏗 Install pyrefly
-        run: pip install pyrefly
+        run: uv pip install pyrefly
       - name: 🚀 Run pre-commit (prek)
         run: |
           # Enable color output for prek
