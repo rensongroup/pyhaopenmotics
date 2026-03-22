@@ -29,10 +29,6 @@ urls.repository = "https://github.com/rensongroup/pyhaopenmotics"
 [tool.hatch]
 version.path = "src/pyhaopenmotics/__version__.py"
 
-[tool.uv]
-
-# [tool.hatch]
-# version.path = "src/pyhaopenmotics/__version__.py"
 [tool.ruff]
 target-version = "py313"
 line-length = 130
