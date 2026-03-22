@@ -48,9 +48,10 @@ jobs:
 
       - name: 🏗 Install dev dependencies
         run: |
-          uv pip install --requirement requirements_dev.txt
+          uv pip install prek
+          uv pip install pyrefly
 
-      - name: 🏗 Install workflow dependencies
+      - name: 🏗 Install workflow dependencies (pyhaopenmotics)
         run: uv sync --all-extras
 
       - name: 🚀 Run pre-commit (prek)
