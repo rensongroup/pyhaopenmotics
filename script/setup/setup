@@ -1,0 +1,36 @@
+#!/bin/bash
+
+# script/setup: Setup script used by DevContainers to prepare the project
+#
+# Installs optional development tools (pyrefly, GitHub Copilot CLI, git-cliff)
+# and configures the environment. Called automatically by DevContainer postStartCommand.
+#
+# Usage:
+#   ./script/setup/setup
+#
+# Examples:
+#   ./script/setup/setup
+
+set -euo pipefail
+
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+cd "$SCRIPT_DIR/../.."
+
+# shellcheck source=script/.lib/output.sh
+source "$SCRIPT_DIR/../.lib/output.sh"
+
+"$SCRIPT_DIR/bootstrap"
+
+if [[ -z ${VIRTUAL_ENV:-} ]]; then
+    log_header "Activating virtual environment"
+    # shellcheck source=/dev/null
+    source "$HOME/.local/ha-venv/bin/activate"
+fi
+
+# Because of the -e (editable) flag, any changes you make to the Python code will be
+# reflected immediately the next time you run your script or tests.
+log_header "Installing pyhaopenmotics package in editable mode"
+uv pip install --editable .
+
+echo ""
+log_success "Project setup complete"
