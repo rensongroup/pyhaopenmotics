@@ -51,7 +51,7 @@ jobs:
           uv pip install prek
 
       - name: 🏗 Install workflow dependencies (pyhaopenmotics)
-        run: uv sync --all-extras
+        run: uv pip install .
 
       - name: 🏗 Install pyrefly
         # if we install it via uv pip install, it cannot be found afterwards.
