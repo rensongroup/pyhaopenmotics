@@ -36,10 +36,8 @@ jobs:
         with:
           path: ~/.cache/prek
           key: prek-${{ hashFiles('.pre-commit-config.yaml') }}
-      - name: 🏗 Install dev dependencies
-        run: uvx pip install --requirement requirements_dev.txt
       - name: 🏗 Install dependencies
-        run: uvx pip install --requirement requirements.txt
+        run: pip install --requirement requirements.txt
       - name: 🏗 Install workflow dependencies
         run: uv sync --all-extras
       - name: 🏗 Install pyrefly
