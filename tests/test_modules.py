@@ -1,7 +1,6 @@
 from unittest.mock import AsyncMock
 
 import pytest
-
 from pyhaopenmotics import OpenMoticsCloud
 from pyhaopenmotics.cloud.models.ventilation import VentilationUnit
 from pyhaopenmotics.cloud.ventilations import OpenMoticsVentilationUnits

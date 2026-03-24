@@ -22,55 +22,9 @@ classifiers = [
   "Topic :: Software Development :: Libraries :: Python Modules",
 ]
 dynamic = [ "version" ]
-dependencies = [
-  "aiohttp>=3.13",
-  "mashumaro>=3.16",
-  "orjson>=3.11",
-  "websockets>=15",
-  "yarl>=1.22",
-]
-# optional-dependencies.build = ["hatch"]
-# optional-dependencies.dev = [
-# "authlib",
-# "deptry",
-# "hatch",
-# "httpx",
-# "prek",
-# "pyright",
-# "pytest",
-# "pytest-asyncio",
-# "pytest-cov",
-# "pytest-mock",
-# "python-dotenv",
-# "ruff",
-# "ty",
-# "tox-uv",
-# ]
 urls.changelog = "https://github.com/rensongroup/pyhaopenmotics/releases"
 urls.issues = "https://github.com/rensongroup/pyhaopenmotics/issues"
 urls.repository = "https://github.com/rensongroup/pyhaopenmotics"
-
-[dependency-groups]
-dev = [
-  { include-group = "lint" },
-  { include-group = "test" },
-  { include-group = "tools" },
-]
-test = [
-  "authlib",
-  "coverage",
-  "httpx",
-  "ipdb",
-  "pytest",
-  "pytest-asyncio",
-  "pytest-cov",
-  "pytest-mock",
-  "python-dotenv",
-  "ty",
-]
-docs = [ "mkdocs" ]
-lint = [ "pyrefly" ]
-tools = [ "ruff", "rust-just" ]
 
 [tool.hatch]
 version.path = "src/pyhaopenmotics/__version__.py"
@@ -78,7 +32,7 @@ version.path = "src/pyhaopenmotics/__version__.py"
 [tool.ruff]
 target-version = "py313"
 line-length = 130
-src = [ "src" ]
+src = [ "src/pyhaopenmotics" ]
 format.indent-style = "space"
 format.quote-style = "double"
 format.docstring-code-format = true
@@ -106,6 +60,7 @@ lint.per-file-ignores."tests/*" = [ "S101" ]
 lint.pylint.max-args = 10
 
 [tool.codespell]
+skip = "script/spell-check"
 write-changes = true
 
 [tool.pyrefly]
@@ -134,14 +89,6 @@ report.exclude_lines = [
   "pragma: no cover",
 ]
 
-# [tool.pyright]
-# venvPath = "."
-# venv = ".venv"
-# include = ["src"]
-# exclude = ["examples", "tests"]
-# reportArgumentType = false
-# reportCallIssue = false
-# reportIncompatibleMethodOverride = false
 [tool.bandit]
 exclude_dirs = [ "tests" ]
 # tests = ["B201", "B301"]
