@@ -63,14 +63,6 @@ lint.pylint.max-args = 10
 skip = "script/spell-check"
 write-changes = true
 
-# [tool.pyright]
-# venvPath = "."
-# venv = ".venv"
-# include = ["src"]
-# exclude = ["examples", "tests"]
-# reportArgumentType = false
-# reportCallIssue = false
-# reportIncompatibleMethodOverride = false
 [tool.bandit]
 exclude_dirs = [ "tests" ]
 # tests = ["B201", "B301"]

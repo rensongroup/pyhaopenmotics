@@ -7,6 +7,7 @@ import asyncio
 # import abc
 import logging
 import socket
+from http import HTTPStatus
 from typing import TYPE_CHECKING, Any, TypeVar
 
 import aiohttp
@@ -18,6 +19,7 @@ from pyhaopenmotics.client.errors import (
     OpenMoticsConnectionError,
     OpenMoticsConnectionSslError,
     OpenMoticsConnectionTimeoutError,
+    OpenMoticsError,
 )
 
 if TYPE_CHECKING:
@@ -29,6 +31,32 @@ _LOGGER = logging.getLogger(__name__)
 
 StrOrURL = str | URL
 T = TypeVar("T")
+
+
+def _obscure_payload(payload: dict[str, Any]) -> dict[str, Any] | None:
+    """Obscure the payload for logging."""
+    if payload is None:
+        return None
+    if "password" in payload:
+        payload = payload.copy()
+        payload["password"] = "****"  # nosec  # noqa: S105
+    return payload
+
+
+def _obscure_headers(headers: dict[str, Any]) -> dict[str, Any] | None:
+    """Obscure the headers for logging."""
+    if headers is None:
+        return None
+    for obscure_header in (
+        "x-august-access-token",
+        "x-access-token",
+        "x-august-api-key",
+        "x-api-key",
+    ):
+        if obscure_header in headers:
+            headers = headers.copy()
+            headers[obscure_header] = "****"
+    return headers
 
 
 class BaseClient:
@@ -78,6 +106,8 @@ class BaseClient:
         self.port = port
 
         self.token_refresh_method = token_refresh_method
+
+        self.debug_enabled = _LOGGER.isEnabledFor(logging.DEBUG)
 
     def _get_api_module(self, module_class: type[T] | None, name: str) -> T:
         """Get an instance of an API module."""
@@ -168,22 +198,32 @@ class BaseClient:
             self._close_session = True
 
         try:
+            if self.debug_enabled:
+                _LOGGER.debug(
+                    "Making %s request to %s with data=%s and headers=%s",
+                    method,
+                    url,
+                    _obscure_payload(payload=data),
+                    _obscure_headers(headers),
+                )
+
             async with asyncio.timeout(self.request_timeout):
                 response = await self.session.request(
                     method,
                     url,
                     data=data,
-                    ssl=self.ssl_context,  # pyright: ignore [reportArgumentType]
+                    ssl=self.ssl_context,
                     headers=headers,
                     **kwargs,
                 )
 
-            if _LOGGER.isEnabledFor(logging.DEBUG):
-                body = await response.text()
+            if self.debug_enabled:
                 _LOGGER.debug(
-                    "Request with status=%s, body=%s",
+                    "Received API response from url: %s, code: %s, headers: %s, content: %s",
+                    url,
                     response.status,
-                    body,
+                    _obscure_headers(response.headers),
+                    await response.read(),
                 )
 
             response.raise_for_status()
@@ -193,24 +233,24 @@ class BaseClient:
                 return await response.json()
             return await response.text()
 
-        except TimeoutError as exception:
+        except TimeoutError as err:
             msg = "Timeout occurred while connecting to OpenMotics API."
-            raise OpenMoticsConnectionTimeoutError(msg) from exception
-        except aiohttp.ClientConnectorSSLError as exception:
+            raise OpenMoticsConnectionTimeoutError(msg) from err
+        except aiohttp.ClientConnectorSSLError as err:
             # pylint: disable=bad-exception-context
             msg = "Error with SSL certificate."
-            raise OpenMoticsConnectionSslError(msg) from exception
-        except aiohttp.ClientResponseError as exception:
-            if exception.status in [401, 403]:
-                raise AuthenticationError from exception
-            msg = f"Error occurred while communicating with OpenMotics API: {exception.status}, message='{exception.message}'"
-            raise OpenMoticsConnectionError(msg) from exception
-        except (socket.gaierror, aiohttp.ClientError) as exception:
+            raise OpenMoticsConnectionSslError(msg) from err
+        except aiohttp.ClientResponseError as err:
+            if err.status in (HTTPStatus.UNAUTHORIZED, HTTPStatus.FORBIDDEN):  # 401, 403
+                raise AuthenticationError from err
+            msg = f"Authentication Error occurred: {err.status}, message='{err.message}'"
+            raise OpenMoticsConnectionError(msg) from err
+        except (socket.gaierror, aiohttp.ClientError) as err:
             msg = "Error occurred while communicating with OpenMotics API."
-            raise OpenMoticsConnectionError(msg) from exception
-        except Exception as exception:
-            msg = f"Unexpected error occurred while communicating with OpenMotics API: {exception}"
-            raise OpenMoticsConnectionError(msg) from exception
+            raise OpenMoticsConnectionError(msg) from err
+        except Exception as err:
+            msg = f"Unexpected error occurred while communicating with OpenMotics API: {err}"
+            raise OpenMoticsError(msg) from err
 
     async def get_token(self) -> None:
         """Login to the gateway and set the token."""
