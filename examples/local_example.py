@@ -17,21 +17,16 @@ import os
 import ssl
 
 from dotenv import load_dotenv
-
-# try:
-#     from dotenv import load_dotenv
-# except ModuleNotFoundError as exc:
-#     msg = "You have to run 'pip install python-dotenv' first"
-#     raise ImportError(msg) from exc
 from pyhaopenmotics import LocalGateway
 
-log = logging.getLogger()
-log.setLevel(logging.DEBUG)
-log_format = logging.Formatter("%(levelname)s [%(asctime)s] %(name)s - %(message)s")
-console = logging.StreamHandler()
-console.setLevel(logging.DEBUG)
-console.setFormatter(log_format)
-log.addHandler(console)
+# 1. Configure the logging format and level
+logging.basicConfig(level=logging.DEBUG)
+
+# 2. Specifically ensure httpx and authlib are set to DEBUG
+# logging.getLogger("httpx").setLevel(logging.DEBUG)
+# logging.getLogger("authlib").setLevel(logging.DEBUG)
+# logging.getLogger("aiohttp").setLevel(logging.DEBUG)
+logging.getLogger("pyhaopentmotics").setLevel(logging.DEBUG)
 
 
 load_dotenv()
