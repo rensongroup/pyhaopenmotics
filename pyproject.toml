@@ -63,6 +63,11 @@ lint.pylint.max-args = 10
 skip = "script/spell-check"
 write-changes = true
 
+[tool.bandit]
+exclude_dirs = [ "tests" ]
+# tests = ["B201", "B301"]
+skips = [ "B101", "B601" ]
+
 [tool.pyrefly]
 project-includes = [ "src" ]
 project-excludes = [ "examples", "tests" ]
@@ -88,8 +93,3 @@ report.exclude_lines = [
   "if TYPE_CHECKING:",
   "pragma: no cover",
 ]
-
-[tool.bandit]
-exclude_dirs = [ "tests" ]
-# tests = ["B201", "B301"]
-skips = [ "B101", "B601" ]
