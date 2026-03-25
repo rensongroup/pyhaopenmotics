@@ -17,3 +17,12 @@ updates:
       actions-deps:
         patterns:
           - "*"
+
+  - package-ecosystem: "pip"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    groups:
+      actions-deps:
+        patterns:
+          - "*"
