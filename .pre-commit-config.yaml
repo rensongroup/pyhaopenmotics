@@ -7,7 +7,7 @@ ci:
 repos:
   # pyproject.toml
   - repo: https://github.com/henryiii/validate-pyproject-schema-store
-    rev: 2026.04.11
+    rev: 2026.04.20
     hooks:
       - id: validate-pyproject
 
@@ -60,7 +60,7 @@ repos:
       - id: pyproject-fmt
 
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.15.10
+    rev: v0.15.11
     hooks:
       - id: ruff-check
         args: [--fix]
@@ -100,7 +100,7 @@ repos:
   #       exclude: .github
 
   - repo: https://github.com/rbubley/mirrors-prettier
-    rev: "v3.8.2"
+    rev: "v3.8.3"
     hooks:
       - id: prettier
         name: Prettier non-workflow files
@@ -146,7 +146,7 @@ repos:
   #   hooks:
   #     - id: pyright
   - repo: https://github.com/facebook/pyrefly-pre-commit
-    rev: 0.60.2 # Note: this is the version of the pre-commit hook, NOT the pyrefly version used for type checking
+    rev: 0.61.1 # Note: this is the version of the pre-commit hook, NOT the pyrefly version used for type checking
     hooks:
       - id: pyrefly-check
         name: Pyrefly (type checking)
