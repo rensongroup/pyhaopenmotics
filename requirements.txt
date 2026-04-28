@@ -7,8 +7,8 @@
 # async-timeout>=4.0.0
 
 # Note: Home Assistant core dependencies are already available
-aiohttp>=3.13
-mashumaro>=3.17.0
-orjson>=3.11
-websockets>=15
-yarl>=1.22
+aiohttp>=3.13.5
+mashumaro>=3.20
+orjson>=3.11.8
+websockets>=16.0
+yarl>=1.23.0
