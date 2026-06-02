@@ -69,20 +69,20 @@ exclude_dirs = [ "tests" ]
 skips = [ "B101", "B601" ]
 
 [tool.pyrefly]
-project-includes = [ "src" ]
-project-excludes = [ "examples", "tests" ]
-infer-with-first-use = false
 errors.bad-argument-type = "ignore"
 errors.bad-override = "ignore"
+infer-with-first-use = false
+project-excludes = [ "examples", "tests" ]
+project-includes = [ "src" ]
 
 [tool.pytest]
-testpaths = [ "tests" ]
-pythonpath = [ "src" ]
 addopts = [
   "--cov=myproject",
   "--cov-report=term-missing",
   "--cov-fail-under=80",
 ]
+pythonpath = [ "src" ]
+testpaths = [ "tests" ]
 
 [tool.coverage]
 run.branch = true
