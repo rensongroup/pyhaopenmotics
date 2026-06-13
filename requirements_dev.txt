@@ -6,7 +6,7 @@
 # Install with: uv pip install -r requirements_dev.txt
 
 # linting and formatting)
-ruff>=0.15.16
+ruff>=0.15.17
 
 # spell checking
 codespell>=2.4.2
@@ -15,7 +15,7 @@ codespell>=2.4.2
 prek>=0.4.4
 
 # Type Checking
-pyrefly>=0.4.4
+pyrefly>=1.0.0
 
 # Better logging for development scripts
 colorlog>=6.10.1
