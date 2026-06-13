@@ -1,6 +1,6 @@
 {
   "name": "PyHaOpenmotics Dev Container",
-  "image": "mcr.microsoft.com/devcontainers/python:3.14",
+  "image": "mcr.microsoft.com/devcontainers/base:trixie",
   "postCreateCommand": "bash .devcontainer/setup-shell.sh && bash .devcontainer/setup-git.sh && script/setup/setup",
   "containerEnv": {
     // Enable asyncio debug mode for easier debugging of async code
@@ -13,12 +13,35 @@
     "APT_UPDATE": "0"
   },
   "features": {
-    "ghcr.io/devcontainers/features/node:1": {
+    "ghcr.io/devcontainers/features/python:1": {
+      "version": "3.14"
+    },
+    "ghcr.io/devcontainers/features/node:2": {
       "version": "lts"
     },
     "ghcr.io/devcontainers/features/github-cli:1": {},
+    "ghcr.io/devcontainers/features/go:1": {},
+    "ghcr.io/devcontainer-community/devcontainer-features/yq:1": {
+      "version": "latest"
+    },
     "ghcr.io/devcontainers-extra/features/apt-packages:1": {
-      "packages": ["golang-go"]
+      "packages": [
+        "autoconf",
+        "automake",
+        "bat",
+        "eza",
+        "git-delta",
+        // "golang-go",
+        "libssl-dev",
+        "libtool",
+        "moreutils",
+        "pipx",
+        "ripgrep",
+        "shellcheck",
+        "shfmt",
+        "tree",
+        "yamllint"
+      ]
     }
   },
   "customizations": {

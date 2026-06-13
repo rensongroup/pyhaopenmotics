@@ -1,5 +1,5 @@
 {
-  "recommendations": ["github.codespaces", "github.copilot-chat"],
+  "recommendations": ["github.codespaces"],
   "unwantedRecommendations": [
     "ms-python.pylint",
     "ms-python.flake8",
