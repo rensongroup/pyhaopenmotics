@@ -2,7 +2,7 @@
 #
 # Install with: uv pip install -r requirements_test.txt
 
-pytest>=9.0.3
+pytest>=9.1.0
 pytest-asyncio>=1.4.0
 pytest-aiohttp>=1.1.1
 pytest-cov>=7.1.0
