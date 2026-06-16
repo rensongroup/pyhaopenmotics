@@ -12,7 +12,7 @@ ruff>=0.15.17
 codespell>=2.4.2
 
 # hook framework for git, pre-commit, and more
-prek>=0.4.4
+prek>=0.4.5
 
 # Type Checking
 pyrefly>=1.0.0
