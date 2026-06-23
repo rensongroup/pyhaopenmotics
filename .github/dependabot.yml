@@ -17,7 +17,14 @@ updates:
       actions-deps:
         patterns:
           - "*"
-
+    # Tell Dependabot to never update the packages listed in requirements.txt
+    ignore:
+      - dependency-name: "aiohttp"
+      - dependency-name: "mashumaro"
+      - dependency-name: "orjson"
+      - dependency-name: "websockets"
+      - dependency-name: "yarl"
+      
   - package-ecosystem: "pip"
     directory: "/"
     schedule:
