@@ -24,7 +24,7 @@ updates:
       - dependency-name: "orjson"
       - dependency-name: "websockets"
       - dependency-name: "yarl"
-      
+
   - package-ecosystem: "pip"
     directory: "/"
     schedule:
