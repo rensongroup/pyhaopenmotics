@@ -9,7 +9,7 @@ pytest-cov>=7.1.0
 pytest-timeout>=2.4.0
 # parallel test execution
 pytest-xdist>=3.8.0
-coverage>=7.14.3
+coverage>=7.15.0
 # time mocking
 freezegun>=1.5.5
 requests-mock>=1.12.1
