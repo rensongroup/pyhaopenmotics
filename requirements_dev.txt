@@ -6,13 +6,13 @@
 # Install with: uv pip install -r requirements_dev.txt
 
 # linting and formatting)
-ruff>=0.15.20
+ruff>=0.15.21
 
 # spell checking
 codespell>=2.4.2
 
 # hook framework for git, pre-commit, and more
-prek>=0.4.5
+prek>=0.4.9
 
 # Type Checking
 pyrefly>=1.1.1
@@ -21,4 +21,4 @@ pyrefly>=1.1.1
 colorlog>=6.10.1
 
 # just is a handy way to save and run project-specific commands.
-rust-just>=1.55.0
+rust-just>=1.56.0
