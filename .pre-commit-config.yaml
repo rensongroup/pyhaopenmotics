@@ -7,7 +7,7 @@ ci:
 repos:
   # pyproject.toml
   - repo: https://github.com/henryiii/validate-pyproject-schema-store
-    rev: 2026.07.20
+    rev: 2026.07.28
     hooks:
       - id: validate-pyproject
 
@@ -60,7 +60,7 @@ repos:
       - id: pyproject-fmt
 
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.16.0
+    rev: v0.16.1
     hooks:
       - id: ruff-check
         args: [--fix]
