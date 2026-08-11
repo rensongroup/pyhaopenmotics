@@ -64,7 +64,7 @@ class LocalGateway(BaseClient):
             port: Port on which the API runs, usually 3000.
             request_timeout: Max timeout to wait for a response from the API.
             session: Optional, shared, aiohttp client session.
-            tls: True, when TLS/SSL should be used.
+            verify_ssl: True, when TLS/SSL should be used.
             username: Username for HTTP auth, if enabled.
             ssl_context: ssl.SSLContext.
 

@@ -38,12 +38,30 @@ format.quote-style = "double"
 format.docstring-code-format = true
 lint.select = [ "ALL" ]
 lint.ignore = [
-  "ANN401", # Dynamically typed expressions (typing.Any) are disallowed !TO BE FIXED!
-  "COM812", # trailing comma (formatter conflict)
-  "D",      # pydocstyle
-  "ERA001", # Found commented-out code
-  "ISC001", # string concat (formatter conflict)
-  "TID252", # Prefer absolute imports over relative imports from parent modules !TO BE FIXED!
+  # "ANN401", # Dynamically typed expressions (typing.Any) are disallowed !TO BE FIXED!
+  # "COM812", # trailing comma (formatter conflict)
+  # "D",      # pydocstyle
+  # "ERA001", # Found commented-out code
+  # "ISC001", # string concat (formatter conflict)
+  # "TID252", # Prefer absolute imports over relative imports from parent modules !TO BE FIXED!
+  "ANN401",  # Dynamically typed expressions (typing.Any) are disallowed !TO BE FIXED!
+  "COM812",  # missing-trailing-comma
+  "CPY001",  # Missing copyright notice at top of file
+  "D100",    # Missing docstring in public module
+  "D104",    # Missing docstring in public package
+  "D105",    # Missing docstring in magic method
+  "D203",    # blank line required before class docstring
+  "D211",    # no-blank-line-before-class
+  "D213",    # multi-line-summary-second-line
+  "EM101",   # raw-string-in-exception
+  "ERA001",  # Found commented-out code
+  "FIX002",  # line-contains-todo
+  "ISC001",  # Conflicts with formatter ruff
+  "PLR0904", # Too many public methods (... > 20)
+  "TD002",   # Missing author in TODO `# TODO(<author_name>): ...`
+  "TD003",   # missing-todo-link
+  "TID252",  # Prefer absolute imports over relative imports from parent modules !TO BE FIXED!
+  "TRY003",  # raise-vanilla-args
 ]
 lint.per-file-ignores."src/pyhaopenmotics/client/baseclient.py" = [ "C901" ]
 lint.per-file-ignores."src/pyhaopenmotics/client/websocket.py" = [
@@ -57,6 +75,7 @@ lint.per-file-ignores."src/pyhaopenmotics/openmoticsgw/models/energy.py" = [
   "PLR2004",
 ]
 lint.per-file-ignores."tests/*" = [ "S101" ]
+lint.fixable = [ "ALL" ]
 lint.pylint.max-args = 10
 
 [tool.codespell]

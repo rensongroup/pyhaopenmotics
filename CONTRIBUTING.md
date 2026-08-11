@@ -102,6 +102,7 @@ def get_device(self, *, address: str) -> Device | None:
     """Return device by address."""
     return self._devices.get(address)
 
+
 # ❌ INCORRECT - Missing type annotations
 def get_device(self, address):
     return self._devices.get(address)
@@ -150,6 +151,7 @@ def create_entity(
     """Create a new entity."""
     ...
 
+
 # Docstrings required for all public classes and methods
 class HmDevice:
     """Representation of a Homematic device."""
@@ -171,6 +173,7 @@ class HmDevice:
 @property
 def device_address(self) -> str:
     """Return the device address."""
+
 
 # ❌ INCORRECT - No period, wrong verb tense
 @property
