@@ -65,7 +65,7 @@ write-changes = true
 
 [tool.bandit]
 exclude_dirs = [ "tests" ]
-# tests = ["B201", "B301"]
+# tests = [ "B201", "B301" ]
 skips = [ "B101", "B601" ]
 
 [tool.pyrefly]
@@ -87,9 +87,9 @@ testpaths = [ "tests" ]
 [tool.coverage]
 run.branch = true
 run.source = [ "src/pyhaopenmotics" ]
-# report.skip_empty = true
 report.exclude_lines = [
   "if __name__ == .__main__.:",
   "if TYPE_CHECKING:",
   "pragma: no cover",
 ]
+# report.skip_empty = true

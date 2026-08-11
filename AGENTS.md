@@ -69,6 +69,7 @@ from dataclasses import dataclass, field
 from mashumaro import field_options
 from mashumaro.mixins.orjson import DataClassORJSONMixin
 
+
 @dataclass
 class Output(DataClassORJSONMixin):
     name: str
