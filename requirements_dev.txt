@@ -6,13 +6,13 @@
 # Install with: uv pip install -r requirements_dev.txt
 
 # linting and formatting)
-ruff>=0.16.2
+ruff>=0.16.3
 
 # spell checking
 codespell>=2.4.3
 
 # hook framework for git, pre-commit, and more
-prek>=0.4.12
+prek>=0.4.13
 
 # Type Checking
 pyrefly>=1.2.0
