@@ -104,8 +104,8 @@ pythonpath = [ "src" ]
 testpaths = [ "tests" ]
 
 [tool.coverage]
-run.branch = true
 run.source = [ "src/pyhaopenmotics" ]
+run.branch = true
 report.exclude_lines = [
   "if __name__ == .__main__.:",
   "if TYPE_CHECKING:",
