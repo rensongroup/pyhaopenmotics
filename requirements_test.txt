@@ -23,4 +23,4 @@ httpx>=0.28.1
 authlib>=1.7.2
 
 # python-dotenv reads key-value pairs from a .env file and can set them as environment variables.
-python-dotenv>=1.2.2
+python-dotenv>=1.2.3
