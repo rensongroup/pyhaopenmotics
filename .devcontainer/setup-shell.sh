@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # Setup shell configuration for DevContainer
 # This script is idempotent and can be run multiple times safely.
 
@@ -22,17 +22,25 @@ add_custom_config() {
         return
     fi
 
-    # Check if our custom section is already added
+    # Refresh managed custom section if already present.
     if grep -q "$marker" "$rc_file" 2>/dev/null; then
-        echo "✓ Custom configuration already present in $rc_file"
-        return
+        local tmp_file
+        tmp_file=$(mktemp)
+        awk -v marker="$marker" '
+            index($0, marker) {exit}
+            {print}
+        ' "$rc_file" >"$tmp_file"
+        mv "$tmp_file" "$rc_file"
+        echo "✓ Refreshed custom configuration in $rc_file"
     fi
 
     # Add custom configuration
-    echo "" >> "$rc_file"
-    echo "$marker" >> "$rc_file"
-    echo "# Added by setup-shell.sh" >> "$rc_file"
-    cat "$custom_file" >> "$rc_file"
+    {
+        echo ""
+        echo "$marker"
+        echo "# Added by setup-shell.sh"
+        cat "$custom_file"
+    } >>"$rc_file"
     echo "✓ Added custom configuration to $rc_file"
 }
 

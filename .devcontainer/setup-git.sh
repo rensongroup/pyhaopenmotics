@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # Setup Git configuration from host (local dev) or GitHub (Codespaces)
 # This script is idempotent and can be run multiple times safely.
 
@@ -12,6 +12,31 @@ fi
 set -e
 
 echo "Setting up Git configuration..."
+
+_devcontainer_dir="$(cd "$(dirname "$0")" && pwd)"
+
+# Load DevContainer environment overrides (.env → .env.local, later wins).
+# Makes HA_VERSION and other vars available in this script and user hooks.
+# shellcheck source=.devcontainer/_load_env.sh
+source "$_devcontainer_dir/_load_env.sh"
+
+if [[ -f "$_devcontainer_dir/hooks/setup-git.pre.sh" ]]; then
+    echo "ℹ Running hook: .devcontainer/hooks/setup-git.pre.sh"
+    # shellcheck source=/dev/null
+    source "$_devcontainer_dir/hooks/setup-git.pre.sh"
+fi
+
+# delta is for the human at the terminal; it passes its input through unchanged
+# when the caller is not a TTY, so scripted and agent git output is unaffected.
+configure_delta() {
+    if ! command -v delta >/dev/null 2>&1; then
+        return 0
+    fi
+    git config --global core.pager "delta"
+    git config --global interactive.diffFilter "delta --color-only"
+    git config --global delta.navigate true
+    echo "✓ Wired delta into git diff, git log and git add -p"
+}
 
 # Check if we're in Codespaces (GitHub automatically configures Git)
 if [ -n "$CODESPACES" ]; then
@@ -28,6 +53,7 @@ if [ -n "$CODESPACES" ]; then
     git config --global submodule.recurse true
     git config --global color.ui true
     echo "✓ Set Git defaults for Codespaces"
+    configure_delta
     exit 0
 fi
 
@@ -72,6 +98,7 @@ git config --global merge.conflictStyle diff3
 git config --global submodule.recurse true
 git config --global color.ui true
 echo "✓ Set Git defaults"
+configure_delta
 
 # Copy useful aliases (skip if they have macOS-specific paths)
 if grep -q '^\[alias\]' "$HOME/.gitconfig.host"; then
@@ -79,25 +106,25 @@ if grep -q '^\[alias\]' "$HOME/.gitconfig.host"; then
 
     # First, collect all aliases from host config
     TEMP_ALIASES=$(mktemp)
-    sed -n '/^\[alias\]/,/^\[/p' "$HOME/.gitconfig.host" | \
-        grep -v '^\[' | \
-        grep -v '^$' | \
+    sed -n '/^\[alias\]/,/^\[/p' "$HOME/.gitconfig.host" |
+        grep -v '^\[' |
+        grep -v '^$' |
         while IFS= read -r line; do
             # Skip aliases with macOS-specific paths
             if echo "$line" | grep -q -E '(^|[/\s])(Applications|usr/local)(/|$)'; then
-          continue
+                continue
             fi
-            echo "$line" >> "$TEMP_ALIASES"
+            echo "$line" >>"$TEMP_ALIASES"
         done
 
     # Apply each alias (git config --global overwrites existing values = idempotent)
     if [ -s "$TEMP_ALIASES" ]; then
         while IFS= read -r line; do
             ALIAS_NAME=$(echo "$line" | awk '{print $1}')
-            ALIAS_VALUE=$(echo "$line" | sed "s/^$ALIAS_NAME = //")
+            ALIAS_VALUE=${line#"$ALIAS_NAME = "}
             git config --global "alias.$ALIAS_NAME" "$ALIAS_VALUE" 2>/dev/null || true
-        done < "$TEMP_ALIASES"
-        echo "  Synced $(wc -l < "$TEMP_ALIASES") aliases"
+        done <"$TEMP_ALIASES"
+        echo "  Synced $(wc -l <"$TEMP_ALIASES") aliases"
     fi
 
     rm -f "$TEMP_ALIASES"
@@ -125,3 +152,10 @@ if [ -n "$SIGNING_KEY" ]; then
 fi
 
 echo "✓ Git configuration complete"
+
+if [[ -f "$_devcontainer_dir/hooks/setup-git.post.sh" ]]; then
+    echo "ℹ Running hook: .devcontainer/hooks/setup-git.post.sh"
+    # shellcheck source=/dev/null
+    source "$_devcontainer_dir/hooks/setup-git.post.sh"
+fi
+unset _devcontainer_dir

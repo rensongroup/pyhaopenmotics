@@ -19,7 +19,7 @@
   "python.testing.pytestArgs": ["--no-cov"],
   "python.testing.pytestEnabled": false,
   "terminal.integrated.profiles.linux": {
-    "zsh": { "path": "/usr/bin/zsh" },
+    "zsh": { "path": "/usr/bin/zsh" }
   },
   "terminal.integrated.defaultProfile.linux": "zsh",
   "yaml.customTags": [
@@ -29,25 +29,25 @@
     "!include_dir_merge_list scalar",
     "!include_dir_named scalar",
     "!include_dir_merge_named scalar",
-    "!input scalar",
+    "!input scalar"
   ],
   "[python]": {
     "editor.defaultFormatter": "charliermarsh.ruff",
     "editor.codeActionsOnSave": {
       "source.fixAll.ruff": "explicit",
-      "source.organizeImports.ruff": "explicit",
-    },
+      "source.organizeImports.ruff": "explicit"
+    }
   },
   "[yaml]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode",
-    "editor.formatOnSave": true,
+    "editor.formatOnSave": true
   },
   "[json]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode",
-    "editor.formatOnSave": true,
+    "editor.formatOnSave": true
   },
   "[jsonc]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode",
-    "editor.formatOnSave": true,
-  },
+    "editor.formatOnSave": true
+  }
 }

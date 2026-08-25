@@ -2,7 +2,7 @@
 
 # script/setup: Setup script used by DevContainers to prepare the project
 #
-# Installs optional development tools (pyrefly, GitHub Copilot CLI, git-cliff)
+# Installs optional development tools (pyright, GitHub Copilot CLI, git-cliff)
 # and configures the environment. Called automatically by DevContainer postStartCommand.
 #
 # Usage:
@@ -13,19 +13,35 @@
 
 set -euo pipefail
 
-SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
-cd "$SCRIPT_DIR/../.."
+SCRIPT_DIR="$(cd "$(dirname "$0")/.." && pwd)"
+cd "$SCRIPT_DIR/.."
 
 # shellcheck source=script/.lib/output.sh
-source "$SCRIPT_DIR/../.lib/output.sh"
+source "$SCRIPT_DIR/.lib/output.sh"
+# shellcheck source=script/.lib/download.sh
+source "$SCRIPT_DIR/.lib/download.sh"
 
-"$SCRIPT_DIR/bootstrap"
-
-if [[ -z ${VIRTUAL_ENV:-} ]]; then
-    log_header "Activating virtual environment"
+# Load environment overrides in two layers (later layers win):
+#   .devcontainer/.env       — project-level defaults, committed to the repo
+#   .devcontainer/.env.local — user/machine-specific overrides, gitignored
+# bootstrap also sources these files, but as a subprocess its env changes don't propagate back.
+# Sourcing here ensures HA_INSTALL_HACS and other vars are available in this script too.
+_env_file=".devcontainer/.env"
+if [[ -f "$_env_file" ]]; then
     # shellcheck source=/dev/null
-    source "$HOME/.local/ha-venv/bin/activate"
+    source "$_env_file"
 fi
+unset _env_file
+_env_local=".devcontainer/.env.local"
+if [[ -f "$_env_local" ]]; then
+    # shellcheck source=/dev/null
+    source "$_env_local"
+fi
+unset _env_local
+
+"$SCRIPT_DIR/setup/bootstrap"
+
+activate_venv
 
 # Because of the -e (editable) flag, any changes you make to the Python code will be
 # reflected immediately the next time you run your script or tests.

@@ -29,7 +29,7 @@ jobs:
         id: get_version
         run: |
           VERSION=$( grep "__version__" src/pyhaopenmotics/__version__.py | cut -d'"' -f2 )
-          echo "extracted_version=$VERSION" >> $GITHUB_OUTPUT
+          echo "extracted_version=$VERSION" >> "$GITHUB_OUTPUT"
 
       - name: 🚀 Draft Release
         uses: release-drafter/release-drafter@34d80673e067bdc0c24568d3af899c216adcfaa9 # v7.7.0
