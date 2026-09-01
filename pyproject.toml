@@ -88,11 +88,11 @@ exclude_dirs = [ "tests" ]
 skips = [ "B101", "B601" ]
 
 [tool.pyrefly]
+project-includes = [ "src" ]
+project-excludes = [ "examples", "tests" ]
 errors.bad-argument-type = "ignore"
 errors.bad-override = "ignore"
 infer-with-first-use = false
-project-excludes = [ "examples", "tests" ]
-project-includes = [ "src" ]
 
 [tool.pytest]
 addopts = [
