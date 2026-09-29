@@ -6,7 +6,7 @@
 # Install with: uv pip install -r requirements_dev.txt
 
 # linting and formatting)
-ruff>=0.16.8
+ruff>=0.16.9
 
 # spell checking
 codespell>=2.4.3
