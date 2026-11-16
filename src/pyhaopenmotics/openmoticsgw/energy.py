@@ -2,12 +2,15 @@
 
 from __future__ import annotations
 
+import logging
 from typing import TYPE_CHECKING, Any
 
 from .models.energy import EnergySensor
 
 if TYPE_CHECKING:
     from ..client.localgateway import LocalGateway
+
+_LOGGER = logging.getLogger(__name__)
 
 
 class OpenMoticsEnergySensors:
@@ -69,15 +72,22 @@ class OpenMoticsEnergySensors:
             if goc["success"] is True:
                 self.sensor_configs = goc["modules"]
 
-        sensors_status = await self._omcloud.exec_action("get_realtime_power")
+        sensors_status = await self._omcloud.exec_action("get_realtime_power") or {}
 
         data = []
         total_idx = 0
         for module in self.sensor_configs:
-            module_id = str(module.get("id"))
-            if module_id is None:
+            if module.get("id") is None:
                 continue
-            for idx, status in enumerate(sensors_status[module_id]):
+            module_id = str(module["id"])
+            statuses = sensors_status.get(module_id)
+            if statuses is None:
+                # The gateway omits a module from `get_realtime_power` when reading it fails
+                # (communication timeout, maintenance mode, ...). Keep a placeholder without status
+                # for each input, so the list positions and ids of all sensors stay stable.
+                _LOGGER.debug("No realtime power data for energy module %s", module_id)
+                statuses = [None] * self._number_of_inputs(module)
+            for idx, status in enumerate(statuses):
                 data.append(
                     {
                         "id": total_idx,
@@ -93,6 +103,11 @@ class OpenMoticsEnergySensors:
             pass
 
         return [EnergySensor.from_dict(device) for device in data]  # pyright: ignore[reportReturnType]
+
+    @staticmethod
+    def _number_of_inputs(module: dict[str, Any]) -> int:
+        """Return the number of inputs defined in an energy module configuration."""
+        return sum(1 for key in module if key.startswith("input") and key.removeprefix("input").isdigit())
 
     async def get_by_id(
         self,
