@@ -83,11 +83,10 @@ class OpenMoticsEnergySensors:
             statuses = sensors_status.get(module_id)
             if statuses is None:
                 # The gateway omits a module from `get_realtime_power` when reading it fails
-                # (communication timeout, maintenance mode, ...). Skip it, but reserve its ids
-                # so the sensors of the following modules keep a stable id.
-                _LOGGER.debug("No realtime power data for energy module %s, skipping", module_id)
-                total_idx += self._number_of_inputs(module)
-                continue
+                # (communication timeout, maintenance mode, ...). Keep a placeholder without status
+                # for each input, so the list positions and ids of all sensors stay stable.
+                _LOGGER.debug("No realtime power data for energy module %s", module_id)
+                statuses = [None] * self._number_of_inputs(module)
             for idx, status in enumerate(statuses):
                 data.append(
                     {

@@ -22,8 +22,8 @@ def _power_module(module_id: int) -> dict[str, Any]:
 
 
 @pytest.mark.asyncio
-async def test_get_all_skips_module_missing_from_realtime_power() -> None:
-    """A module missing from `get_realtime_power` is skipped without shifting later ids."""
+async def test_get_all_keeps_placeholders_for_module_missing_from_realtime_power() -> None:
+    """A module missing from `get_realtime_power` yields placeholders, so positions and ids stay stable."""
     gateway = AsyncMock(spec=LocalGateway)
     gateway.exec_action.side_effect = [
         {"success": True, "modules": [_power_module(1), _power_module(2), _power_module(3)]},
@@ -36,8 +36,11 @@ async def test_get_all_skips_module_missing_from_realtime_power() -> None:
 
     sensors = await OpenMoticsEnergySensors(gateway).get_all()
 
-    assert [sensor.idx for sensor in sensors] == list(range(8)) + list(range(16, 24))
-    module_3_first = sensors[INPUTS_PER_MODULE]
+    assert [sensor.idx for sensor in sensors] == list(range(3 * INPUTS_PER_MODULE))
+    module_2 = sensors[INPUTS_PER_MODULE : 2 * INPUTS_PER_MODULE]
+    assert all(sensor.status is None for sensor in module_2)
+    assert module_2[0].name == "Module 2 input 0"
+    module_3_first = sensors[2 * INPUTS_PER_MODULE]
     assert module_3_first.name == "Module 3 input 0"
     assert module_3_first.status is not None
     assert module_3_first.status.power == REALTIME_POWER_MODULE_3[3]
